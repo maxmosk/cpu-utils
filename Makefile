@@ -3,7 +3,7 @@
 include CMakefile
 
 #Compiler flags
-CFLAGS=$(CFLAGS_WARNINGS) $(CFLAGS_SYNTAX)
+CFLAGS=$(CFLAGS_WARNINGS) $(CFLAGS_SYNTAX) -I$(LIBDIR)/stack/src/include -I$(LIBDIR)/text/src/head
 LD=ld
 LDFLAGS=-relocatable
 CCLDFLAGS=$(CFLAGS_LINK)
@@ -53,7 +53,7 @@ $(BUILDDIR):
 	mkdir $(BUILDDIR)
 
 $(EXECUTABLE): $(OBJFILES)
-	$(LD) $(LDFLAGS) -o $@ $?
+	$(CC) $(CCLDFLAGS) $(CFLAGS) -o $@ $?
 
 $(OBJFILES): $(BUILDDIR)/%.o : $(SOURCEDIR)/%.c $(HEADFILES)
 	$(CC) -c $(CFLAGS) -I$(HEADERDIR) -o $@ $<
