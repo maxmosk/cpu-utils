@@ -1,4 +1,4 @@
-.PHONY: all clean debug release updlib buildlib cplib
+.PHONY: all clean cleanlib debug release updlib buildlib cplib
 
 include CMakefile
 
@@ -17,11 +17,10 @@ BUILDDIR=build
 SOURCES=$(wildcard $(SOURCEDIR)/*.c)
 HEADFILES=$(wildcard $(HEADERDIR)/*.h)
 OBJFILES=$(patsubst $(SOURCEDIR)/%.c,$(BUILDDIR)/%.o,$(SOURCES))
-#LIBDIRS=$(wildcard $(LIBDIR)/*)
 EXECUTABLE=$(BUILDDIR)/cpuemu
 
 
-all: dir cplib $(EXECUTABLE)
+all: $(BUILDDIR) cplib $(EXECUTABLE)
 
 
 debug: CFLAGS+= $(CFLAGS_FLAGS) $(CFLAGS_DEBUG) 
@@ -36,16 +35,21 @@ release: MODE+=release
 updlib:
 	mkdir lib
 	git clone https://github.com/maxmosk/Lovely-stack.git lib/stack
+	git clone https://github.com/maxmosk/Evgeny-Onegin.git lib/text
 
 buildlib: $(LIBDIR)
-	cd lib/stack; \
+	cd lib/stack; 		\
+		make clean;		\
+		make $(MODE)
+	cd lib/text; 		\
+		make clean;		\
 		make $(MODE)
 
-cplib:
-	cp $(LIBDIR)/*/build/lib*.o build
+cplib: $(BUILDDIR) buildlib
+	cp $(LIBDIR)/*/build/lib*.o $(BUILDDIR)
 
 
-dir:
+$(BUILDDIR):
 	mkdir $(BUILDDIR)
 
 $(EXECUTABLE): $(OBJFILES)
@@ -56,5 +60,8 @@ $(OBJFILES): $(BUILDDIR)/%.o : $(SOURCEDIR)/%.c $(HEADFILES)
 
 
 clean:
-	rm -rf $(BUILDDIR) $(LIBDIR)
+	rm -rf $(BUILDDIR)
+
+cleanlib:
+	rm -rf $(LIBDIR)
 
