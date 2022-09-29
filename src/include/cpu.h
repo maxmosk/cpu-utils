@@ -27,6 +27,9 @@ enum CPU_CODES
 enum CPU_CODES cpuCtor(cpu_t *cpu);
 
 
+enum CPU_CODES cpuDtor(cpu_t *cpu);
+
+
 
 #endif /* __CPU_H_INCLUDED__ */
 
