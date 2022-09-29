@@ -16,5 +16,17 @@ typedef struct
 
 
 
+enum CPU_CODES
+{
+    CPU_SUCCESS = 0,
+    CPU_ERROR   = 1
+};
+
+
+
+enum CPU_CODES cpuCtor(cpu_t *cpu);
+
+
+
 #endif /* __CPU_H_INCLUDED__ */
 

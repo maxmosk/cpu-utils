@@ -53,7 +53,7 @@ $(BUILDDIR):
 	mkdir $(BUILDDIR)
 
 $(EXECUTABLE): $(OBJFILES)
-	$(CC) $(CCLDFLAGS) $(CFLAGS) -o $@ $?
+	$(CC) $(CCLDFLAGS) $(CFLAGS) -o $@ $(BUILDDIR)/*.o
 
 $(OBJFILES): $(BUILDDIR)/%.o : $(SOURCEDIR)/%.c $(HEADFILES)
 	$(CC) -c $(CFLAGS) -I$(HEADERDIR) -o $@ $<
