@@ -29,6 +29,12 @@ enum CPU_CODES
 enum CPU_CODES cpuCtor(cpu_t *cpu);
 
 
+enum CPU_CODES cpuLoad(cpu_t *cpu, const char *codeFile);
+
+
+enum CPU_CODES cpuExec(cpu_t *cpu);
+
+
 enum CPU_CODES cpuDtor(cpu_t *cpu);
 
 
