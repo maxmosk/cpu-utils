@@ -12,6 +12,8 @@ typedef struct
 {
     stack_t stack;
     text_t code;
+
+    size_t pc;
 } cpu_t;
 
 
