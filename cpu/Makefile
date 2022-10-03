@@ -1,6 +1,6 @@
 .PHONY: all clean cleanlib debug release updlib buildlib cplib
 
-include CMakefile
+include ../CMakefile
 
 #Compiler flags
 CFLAGS=$(CFLAGS_WARNINGS) $(CFLAGS_SYNTAX) -I$(LIBDIR)/stack/src/include -I$(LIBDIR)/text/src/head
