@@ -4,14 +4,13 @@
 
 
 #include "stack.h"
-#include "text.h"
 
 
 
 typedef struct
 {
     stack_t stack;
-    text_t code;
+    void *code;
 
     size_t pc;
 } cpu_t;
