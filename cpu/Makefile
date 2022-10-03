@@ -3,7 +3,7 @@
 include ../CMakefile
 
 #Compiler flags
-CFLAGS=$(CFLAGS_WARNINGS) $(CFLAGS_SYNTAX) -I$(LIBDIR)/stack/src/include -I$(LIBDIR)/text/src/head
+CFLAGS=$(CFLAGS_WARNINGS) $(CFLAGS_SYNTAX) -I$(LIBDIR)/stack/src/include
 LD=ld
 LDFLAGS=-relocatable
 CCLDFLAGS=$(CFLAGS_LINK)
@@ -17,7 +17,7 @@ BUILDDIR=build
 SOURCES=$(wildcard $(SOURCEDIR)/*.c)
 HEADFILES=$(wildcard $(HEADERDIR)/*.h)
 OBJFILES=$(patsubst $(SOURCEDIR)/%.c,$(BUILDDIR)/%.o,$(SOURCES))
-EXECUTABLE=$(BUILDDIR)/cpuemu
+EXECUTABLE=$(BUILDDIR)/cpu
 
 
 all: $(BUILDDIR) cplib $(EXECUTABLE)
@@ -35,13 +35,9 @@ release: MODE+=release
 updlib:
 	mkdir lib
 	git clone https://github.com/maxmosk/Lovely-stack.git lib/stack
-	git clone https://github.com/maxmosk/Evgeny-Onegin.git lib/text
 
 buildlib: $(LIBDIR)
 	cd lib/stack; 		\
-		make clean;		\
-		make $(MODE)
-	cd lib/text; 		\
 		make clean;		\
 		make $(MODE)
 
