@@ -2,6 +2,18 @@
 
 
 
+#define CPU_CHECK(cond, ret)                                                    \
+do                                                                              \
+{                                                                               \
+    if (!(cond))                                                                \
+    {                                                                           \
+        return (ret);                                                           \
+    }                                                                           \
+}                                                                               \
+while (0)
+
+
+
 static long int cpuFileSize(const char *file);
 
 
@@ -23,22 +35,13 @@ enum CPU_CODES cpuLoad(cpu_t *cpu, const char *codeFile)
     long int codeSize = cpuFileSize(codeFile);
 
     cpu->code = calloc(codeSize, 1);
-    if (NULL == cpu->code)
-    {
-        return CPU_ERROR;
-    }
+    CPU_CHECK(NULL != cpu->code, CPU_ERROR);
 
     FILE *exeFile = fopen(codeFile, "rb");
-    if (NULL == exeFile)
-    {
-        return CPU_ERROR;
-    }
+    CPU_CHECK(NULL != exeFile, CPU_ERROR);
 
     size_t readed = fread(cpu->code, 1, codeSize, exeFile);
-    if (readed != codeSize)
-    {
-        return CPU_ERROR;
-    }
+    CPU_CHECK(readed == codeSize, CPU_ERROR);
 
     cpu->codeSize = codeSize;
 
@@ -67,11 +70,7 @@ static long int cpuFileSize(const char *file)
 {
     struct stat buf = {0};
     
-    if (-1 == stat(file, &buf))
-    {
-        perror(strerror(errno));
-        return -1;
-    }
+    CPU_CHECK(-1 != stat(file, &buf), -1);
 
     return buf.st_size;
 }
