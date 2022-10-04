@@ -43,7 +43,11 @@ static long int cpuFileSize(const char *file)
 {
     struct stat buf = {0};
     
-    stat(file, &buf);
+    if (-1 == stat(file, &buf))
+    {
+        perror(strerror(errno));
+        return -1;
+    }
 
     return buf.st_size;
 }
