@@ -5,7 +5,9 @@
 #define CPU_CHECK(cond, ret)                                                    \
 do                                                                              \
 {                                                                               \
-    if (!(cond))                                                                \
+    bool tmpcond_ = (cond);                                                     \
+    assert(tmpcond_);                                                           \
+    if (!(tmpcond_))                                                            \
     {                                                                           \
         return (ret);                                                           \
     }                                                                           \
@@ -34,14 +36,16 @@ enum CPU_CODES cpuLoad(cpu_t *cpu, const char *codeFile)
 {
     long int codeSize = cpuFileSize(codeFile);
 
-    cpu->code = calloc(codeSize, 1);
+    cpu->code = calloc((size_t) codeSize, 1);
     CPU_CHECK(NULL != cpu->code, CPU_ERROR);
 
     FILE *exeFile = fopen(codeFile, "rb");
     CPU_CHECK(NULL != exeFile, CPU_ERROR);
 
-    size_t readStat = fread(cpu->code, 1, codeSize, exeFile);
-    CPU_CHECK(readStat == codeSize, CPU_ERROR);
+    size_t readStat = fread(cpu->code, 1, (size_t) codeSize, exeFile);
+    CPU_CHECK((size_t) readStat == codeSize, CPU_ERROR);
+
+    CPU_CHECK(signCheck((signature_t *) cpu->code), CPU_ERROR);
 
     cpu->codeSize = codeSize;
 

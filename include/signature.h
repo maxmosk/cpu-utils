@@ -2,6 +2,7 @@
 #define __SIGNATURE_H_INCLUDED__
 
 
+#include <stdbool.h>
 #include <stdint.h>
 #include "version.h"
 
@@ -14,6 +15,12 @@ typedef struct
     uint16_t format;
     uint16_t version;
 } signature_t;
+
+
+static bool signCheck(signature_t *sign)
+{
+    return (CPU_EXE_FORMAT == sign->format) && (CPU_EXE_VERSION == sign->version);
+}
 
 
 #endif /* __SIGNATURE_H_INCLUDED__ */
