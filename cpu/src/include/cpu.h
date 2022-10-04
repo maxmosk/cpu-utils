@@ -3,6 +3,9 @@
 
 
 
+#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "stack.h"
 #include "opcodes.h"
 
@@ -12,8 +15,8 @@ typedef struct
 {
     stack_t stack;
     cpuInstruction_t *code;
-
     size_t pc;
+    long int codeSize;
 } cpu_t;
 
 

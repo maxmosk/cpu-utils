@@ -5,7 +5,7 @@
 
 int main(int argc, char **argv)
 {
-    if (1 != argc)
+    if (2 != argc)
     {
         printf("Error: invalid command line arguments. Please, read docs.\n");
     }
