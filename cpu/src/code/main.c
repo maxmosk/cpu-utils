@@ -12,10 +12,10 @@ int main(int argc, char **argv)
     }
 
     cpu_t myCPU = {0};
-    cpuCtor(&myCPU) ASSERTED;
-    cpuLoad(&myCPU, argv[1]) ASSERTED;
-    cpuExec(&myCPU) ASSERTED;
-    cpuDtor(&myCPU) ASSERTED;
+    cpuCtor(&myCPU) CPU_ASSERTED;
+    cpuLoad(&myCPU, argv[1]) CPU_ASSERTED;
+    cpuExec(&myCPU) CPU_ASSERTED;
+    cpuDtor(&myCPU) CPU_ASSERTED;
 
     return 0;
 }
