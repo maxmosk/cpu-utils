@@ -40,8 +40,8 @@ enum CPU_CODES cpuLoad(cpu_t *cpu, const char *codeFile)
     FILE *exeFile = fopen(codeFile, "rb");
     CPU_CHECK(NULL != exeFile, CPU_ERROR);
 
-    size_t readed = fread(cpu->code, 1, codeSize, exeFile);
-    CPU_CHECK(readed == codeSize, CPU_ERROR);
+    size_t readStat = fread(cpu->code, 1, codeSize, exeFile);
+    CPU_CHECK(readStat == codeSize, CPU_ERROR);
 
     cpu->codeSize = codeSize;
 
