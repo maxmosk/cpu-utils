@@ -10,6 +10,7 @@
 #include <sys/types.h>
 #include "stack.h"
 #include "opcodes.h"
+#include "signature.h"
 
 
 
