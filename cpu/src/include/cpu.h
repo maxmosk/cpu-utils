@@ -4,13 +4,14 @@
 
 
 #include "stack.h"
+#include "opcodes.h"
 
 
 
 typedef struct
 {
     stack_t stack;
-    void *code;
+    cpuInstruction_t *code;
 
     size_t pc;
 } cpu_t;

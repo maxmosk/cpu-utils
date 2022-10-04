@@ -3,7 +3,7 @@
 include ../CMakefile
 
 #Compiler flags
-CFLAGS=$(CFLAGS_WARNINGS) $(CFLAGS_SYNTAX) -I$(LIBDIR)/stack/src/include
+CFLAGS=$(CFLAGS_WARNINGS) $(CFLAGS_SYNTAX) -I$(LIBDIR)/stack/src/include -I$(COMMUN_INCLUDE)
 LD=ld
 LDFLAGS=-relocatable
 CCLDFLAGS=$(CFLAGS_LINK)
@@ -13,6 +13,7 @@ MODE=
 LIBDIR=lib
 SOURCEDIR=src/code
 HEADERDIR=src/include
+COMMUN_INCLUDE=../include
 BUILDDIR=build
 SOURCES=$(wildcard $(SOURCEDIR)/*.c)
 HEADFILES=$(wildcard $(HEADERDIR)/*.h)
