@@ -45,13 +45,15 @@ enum CPU_CODES cpuLoad(cpu_t *cpu, const char *codeFile)
     FILE *exeFile = fopen(codeFile, "rb");
     CPU_CHECK(NULL != exeFile, CPU_ERROR);
 
-    size_t readStat = fread(cpu->code, 1, (size_t) codeSize, exeFile);
-    CPU_CHECK((size_t) readStat == codeSize, CPU_ERROR);
+    signature_t sign = {0};
+    size_t signReadStat = fread(&sign, 1, sizeof (signature_t), exeFile);
+    CPU_CHECK(sizeof (signature_t) == (size_t) signReadStat, CPU_ERROR);
+    CPU_CHECK(signCheck(&sign), CPU_ERROR);
 
-    CPU_CHECK(signCheck((signature_t *) cpu->code), CPU_ERROR);
+    size_t codeReadStat = fread(cpu->code, 1, (size_t) codeSize - sizeof (signature_t), exeFile);
+    CPU_CHECK((size_t) codeReadStat == codeSize - sizeof (signature_t), CPU_ERROR);
 
-    cpu->code = (signature_t *) cpu->code + 1;
-    cpu->codeSize = (codeSize - sizeof (signature_t)) / sizeof (cpuInstruction_t);
+    cpu->codeSize = codeSize / sizeof (cpuInstruction_t);
 
     return CPU_SUCCESS;
 }
@@ -72,7 +74,6 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
 
             case CMD_PUSH:
                 CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, cpu->code[cpu->pc].data), CPU_ERROR);
-                printf("Hello!\n");
                 break;
 
             default:
@@ -90,7 +91,7 @@ enum CPU_CODES cpuDtor(cpu_t *cpu)
 {
     stackDtor(&(cpu->stack)) ASSERTED;
 
-    free((signature_t *) cpu->code - 1);
+    free(cpu->code);
     cpu->codeSize = -1;
     
     return CPU_SUCCESS;
