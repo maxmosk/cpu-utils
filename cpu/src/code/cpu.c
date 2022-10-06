@@ -86,6 +86,16 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
             }
                 break;
 
+            case CMD_SUB:
+            {
+                cpuData_t a = NAN;
+                cpuData_t b = NAN;
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_ERROR);
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_ERROR);
+                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, b - a), CPU_ERROR);
+            }
+                break;
+
             case CMD_OUT:
             {
                 cpuData_t num = NAN;
