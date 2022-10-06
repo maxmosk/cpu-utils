@@ -52,12 +52,11 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
 
         char cmdBuf[64] = "";
         char format[64] = "";
-        sprintf(format, "%%%zus %%n", sizeof (cmdBuf) - 1);
+        sprintf(format, "%%%zus %%lf", sizeof (cmdBuf) - 1);
 
         cpuData_t value = NAN;
-        int readChar = -1;
 
-        int status = sscanf(curLine, format, cmdBuf, &readChar);
+        int status = sscanf(curLine, format, cmdBuf, &value);
         if ((status == EOF) || (status == 0))
         {
             continue;
@@ -101,6 +100,23 @@ enum ASM_CODES asmDtor(asm_t *thisAsm)
 
 enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuData_t arg)
 {
+    printf("--- %s %lf\n", cmd, arg);
+    if (0 == strcmp("push", cmd))
+    {
+        ASM_CHECK(IS_VALID(arg), ASM_ERROR);
+        dest->opcode = CMD_PUSH;
+        dest->data = arg;
+    }
+    else if (0 == strcmp("hlt", cmd))
+    {
+        ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
+        dest->opcode = CMD_HLT;
+    }
+    else
+    {
+        return ASM_ERROR;
+    }
+
     return ASM_SUCCESS;
 }
 
