@@ -56,7 +56,9 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
 
         cpuData_t value = NAN;
         int readChar = -1;
-        if (0 == sscanf(curLine, format, cmdBuf, &readChar))
+
+        int status = sscanf(curLine, format, cmdBuf, &readChar);
+        if ((status == EOF) || (status == 0))
         {
             continue;
         }
@@ -65,6 +67,7 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
             ASM_CHECK(ASM_SUCCESS == asmMakeInstr(thisAsm->code + thisAsm->codeSize, cmdBuf, value),
                     ASM_ERROR);
             thisAsm->codeSize++;
+            printf("%zu --- %s\n", thisAsm->codeSize, curLine);
         }
     }
     
