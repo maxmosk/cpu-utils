@@ -54,6 +54,7 @@ enum CPU_CODES cpuLoad(cpu_t *cpu, const char *codeFile)
 
     size_t codeReadStat = fread(cpu->code, 1, (size_t) codeSize - sizeof (signature_t), exeFile);
     CPU_CHECK((size_t) codeReadStat == codeSize - sizeof (signature_t), CPU_FILEERR);
+    CPU_CHECK(0 == fclose(exeFile), CPU_FILEERR);
 
     cpu->codeSize = codeSize / sizeof (cpuInstruction_t);
 
