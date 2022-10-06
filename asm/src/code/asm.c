@@ -49,6 +49,9 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
 
     signature_t sign = {CPU_EXE_FORMAT, CPU_EXE_VERSION};
     ASM_CHECK(1 == fwrite(&sign, sizeof sign, 1, exec), (fclose(exec), ASM_ERROR));
+    ASM_CHECK(thisAsm->codeSize == fwrite(&sign, sizeof *thisAsm->code, thisAsm->codeSize, exec), (fclose(exec), ASM_ERROR));
+    ASM_CHECK(0 == fclose(exec), ASM_ERROR);
+
 
     return ASM_SUCCESS;
 }
