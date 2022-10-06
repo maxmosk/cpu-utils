@@ -29,6 +29,8 @@ enum ASM_CODES asmLoad(asm_t *thisAsm, const char *sourceFile)
     ASM_CHECK(NULL != thisAsm, ASM_ERROR);
     ASM_CHECK(NULL != sourceFile, ASM_ERROR);
 
+    ASM_CHECK(SUCCESS == txtRead(&thisAsm->source, sourceFile), ASM_ERROR);
+
     return ASM_SUCCESS;
 }
 
