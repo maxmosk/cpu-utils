@@ -8,6 +8,9 @@
 
 
 
+#define IS_VALID isfinite
+
+
 
 enum CPU_OPCODES
 {
