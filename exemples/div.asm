@@ -1,6 +1,6 @@
 in
 in
-add
+div
 out
 hlt
 

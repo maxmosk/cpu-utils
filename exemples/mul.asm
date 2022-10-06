@@ -1,6 +1,6 @@
 in
 in
-add
+mul
 out
 hlt
 
