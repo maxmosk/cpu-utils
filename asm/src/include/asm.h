@@ -24,7 +24,7 @@ typedef struct
 {
     text_t source;
     size_t codeSize;
-    cpuInstruction_t code;
+    cpuInstruction_t *code;
 } asm_t;
 
 
