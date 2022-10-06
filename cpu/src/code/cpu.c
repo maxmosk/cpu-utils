@@ -104,6 +104,15 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
             }
                 break;
 
+            case CMD_IN:
+            {
+                cpuData_t num = NAN;
+                CPU_CHECK(1 == scanf("%lf", &num), CPU_ERROR);
+                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, num), CPU_ERROR);
+            }
+                break;
+
+
             default:
                 cpuDump(cpu);
                 return CPU_ERROR;
