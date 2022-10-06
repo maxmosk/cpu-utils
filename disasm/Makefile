@@ -16,10 +16,10 @@ BUILDDIR=build
 SOURCES=$(wildcard $(SOURCEDIR)/*.c)
 HEADFILES=$(wildcard $(HEADERDIR)/*.h)
 OBJFILES=$(patsubst $(SOURCEDIR)/%.c,$(BUILDDIR)/%.o,$(SOURCES))
-EXECUTABLE=$(BUILDDIR)/asm
+EXECUTABLE=$(BUILDDIR)/disasm
 
 
-all: $(EXECUTABLE)
+all: $(BUILDDIR) $(EXECUTABLE)
 
 
 debug: CFLAGS+= $(CFLAGS_FLAGS) $(CFLAGS_DEBUG) 
