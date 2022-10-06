@@ -75,16 +75,16 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                 break;
 
             case CMD_PUSH:
-                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, cpu->code[cpu->pc].data), CPU_ERROR);
+                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, cpu->code[cpu->pc].data), CPU_STACKERR);
                 break;
 
             case CMD_ADD:
             {
                 cpuData_t a = NAN;
                 cpuData_t b = NAN;
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_ERROR);
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_ERROR);
-                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, a + b), CPU_ERROR);
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_STACKERR);
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_STACKERR);
+                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, a + b), CPU_STACKERR);
             }
                 break;
 
@@ -92,16 +92,16 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
             {
                 cpuData_t a = NAN;
                 cpuData_t b = NAN;
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_ERROR);
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_ERROR);
-                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, b - a), CPU_ERROR);
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_STACKERR);
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_STACKERR);
+                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, b - a), CPU_STACKERR);
             }
                 break;
 
             case CMD_OUT:
             {
                 cpuData_t num = NAN;
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &num), CPU_ERROR);
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &num), CPU_STACKERR);
                 printf("%lg\n", num);
             }
                 break;
@@ -110,7 +110,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
             {
                 cpuData_t num = NAN;
                 CPU_CHECK(1 == scanf("%lf", &num), CPU_ERROR);
-                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, num), CPU_ERROR);
+                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, num), CPU_STACKERR);
             }
                 break;
 
@@ -118,9 +118,9 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
             {
                 cpuData_t a = NAN;
                 cpuData_t b = NAN;
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_ERROR);
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_ERROR);
-                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, b * a), CPU_ERROR);
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_STACKERR);
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_STACKERR);
+                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, b * a), CPU_STACKERR);
             }
                 break;
 
@@ -128,10 +128,10 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
             {
                 cpuData_t a = NAN;
                 cpuData_t b = NAN;
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_ERROR);
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_ERROR);
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_STACKERR);
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_STACKERR);
                 CPU_CHECK(abs(a) < 0.000001, CPU_ZERODIV);
-                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, b / a), CPU_ERROR);
+                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, b / a), CPU_STACKERR);
             }
                 break;
 
