@@ -50,3 +50,4 @@ enum ASM_CODES asmDtor(asm_t *thisAsm);
 
 
 #endif /* __ASM_H_INCLUDED__ */
+
