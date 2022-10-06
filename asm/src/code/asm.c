@@ -66,7 +66,6 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
             ASM_CHECK(ASM_SUCCESS == asmMakeInstr(thisAsm->code + thisAsm->codeSize, cmdBuf, value),
                     ASM_ERROR);
             thisAsm->codeSize++;
-            printf("%zu --- %s\n", thisAsm->codeSize, curLine);
         }
     }
     
@@ -100,32 +99,36 @@ enum ASM_CODES asmDtor(asm_t *thisAsm)
 
 enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuData_t arg)
 {
-    printf("--- %s %lf\n", cmd, arg);
     if (0 == strcmp("push", cmd))
     {
         ASM_CHECK(IS_VALID(arg), ASM_ERROR);
         dest->opcode = CMD_PUSH;
         dest->data = arg;
     }
+
     else if (0 == strcmp("hlt", cmd))
     {
         ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
         dest->opcode = CMD_HLT;
     }
+
     else if (0 == strcmp("add", cmd))
     {
         ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
         dest->opcode = CMD_ADD;
     }
+
     else if (0 == strcmp("out", cmd))
     {
         ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
         dest->opcode = CMD_OUT;
     }
+
     else
     {
         return ASM_ERROR;
     }
+
 
     return ASM_SUCCESS;
 }
