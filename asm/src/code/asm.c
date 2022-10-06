@@ -16,6 +16,9 @@ while (0)
 
 
 
+enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuData_t arg);
+
+
 enum ASM_CODES asmCtor(asm_t *thisAsm)
 {
     ASM_CHECK(NULL != thisAsm, ASM_ERROR);
@@ -47,7 +50,22 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
     {
         char *curLine = txtGetStr(&thisAsm->source.lines[i]);
 
-        char *cmdBuf[50] = "";
+        char cmdBuf[64] = "";
+        char format[64] = "";
+        sprintf(format, "%%%zus %%n", sizeof (cmdBuf) - 1);
+
+        cpuData_t value = NAN;
+        int readChar = -1;
+        if (0 == sscanf(curLine, format, cmdBuf, &readChar))
+        {
+            continue;
+        }
+        else
+        {
+            ASM_CHECK(ASM_SUCCESS == asmMakeInstr(thisAsm->code + thisAsm->codeSize, cmdBuf, value),
+                    ASM_ERROR);
+            thisAsm->codeSize++;
+        }
     }
     
 
@@ -56,7 +74,7 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
 
     signature_t sign = {CPU_EXE_FORMAT, CPU_EXE_VERSION};
     ASM_CHECK(1 == fwrite(&sign, sizeof sign, 1, exec), (fclose(exec), ASM_ERROR));
-    ASM_CHECK(thisAsm->codeSize == fwrite(&sign, sizeof *thisAsm->code, thisAsm->codeSize, exec),
+    ASM_CHECK(thisAsm->codeSize == fwrite(thisAsm->code, sizeof *thisAsm->code, thisAsm->codeSize, exec),
             (fclose(exec), ASM_ERROR));
     ASM_CHECK(0 == fclose(exec), ASM_ERROR);
 
@@ -74,6 +92,12 @@ enum ASM_CODES asmDtor(asm_t *thisAsm)
     thisAsm->codeSize = SIZE_MAX;
 
 
+    return ASM_SUCCESS;
+}
+
+
+enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuData_t arg)
+{
     return ASM_SUCCESS;
 }
 
