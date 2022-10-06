@@ -3,6 +3,11 @@
 
 
 
+#include <stdint.h>
+
+
+
+
 enum CPU_OPCODES
 {
     CMD_HLT  = 0,
