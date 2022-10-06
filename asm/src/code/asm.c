@@ -112,6 +112,16 @@ enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuData_t a
         ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
         dest->opcode = CMD_HLT;
     }
+    else if (0 == strcmp("add", cmd))
+    {
+        ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
+        dest->opcode = CMD_ADD;
+    }
+    else if (0 == strcmp("out", cmd))
+    {
+        ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
+        dest->opcode = CMD_OUT;
+    }
     else
     {
         return ASM_ERROR;
