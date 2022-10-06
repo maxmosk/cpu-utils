@@ -76,6 +76,22 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                 CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, cpu->code[cpu->pc].data), CPU_ERROR);
                 break;
 
+            case CMD_ADD:
+            {
+                cpuData_t a = NAN;
+                cpuData_t b = NAN;
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_ERROR);
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_ERROR);
+                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, a + b), CPU_ERROR);
+            }
+
+            case CMD_OUT:
+            {
+                cpuData_t num = NAN;
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &num), CPU_ERROR);
+                printf("%lf\n", num);
+            }
+
             default:
                 cpuDump(cpu);
                 return CPU_ERROR;
