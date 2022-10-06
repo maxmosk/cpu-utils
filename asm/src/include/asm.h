@@ -32,8 +32,12 @@ typedef struct
 
 enum ASM_CODES
 {
-    ASM_SUCCESS = 0,
-    ASM_ERROR   = 1
+    ASM_SUCCESS  = 0,
+    ASM_ERROR    = 1,
+    ASM_ALLOCERR = 2,
+    ASM_FILEERR  = 3,
+    ASM_TEXTERR  = 4,
+    ASM_INSTRERR = 5
 };
 
 

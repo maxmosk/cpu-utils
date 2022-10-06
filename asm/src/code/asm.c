@@ -32,8 +32,8 @@ enum ASM_CODES asmLoad(asm_t *thisAsm, const char *sourceFile)
     ASM_CHECK(NULL != thisAsm, ASM_ERROR);
     ASM_CHECK(NULL != sourceFile, ASM_ERROR);
 
-    ASM_CHECK(SUCCESS == txtRead(&thisAsm->source, sourceFile), ASM_ERROR);
-    ASM_CHECK(NULL != (thisAsm->code = calloc(thisAsm->source.quan_lines, sizeof *thisAsm->code)), ASM_ERROR);
+    ASM_CHECK(SUCCESS == txtRead(&thisAsm->source, sourceFile), ASM_TEXTERR);
+    ASM_CHECK(NULL != (thisAsm->code = calloc(thisAsm->source.quan_lines, sizeof *thisAsm->code)), ASM_ALLOCERR);
 
 
     return ASM_SUCCESS;
@@ -64,7 +64,7 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
         else
         {
             ASM_CHECK(ASM_SUCCESS == asmMakeInstr(thisAsm->code + thisAsm->codeSize, cmdBuf, value),
-                    ASM_ERROR);
+                    ASM_INSTRERR);
             thisAsm->codeSize++;
         }
     }
@@ -74,10 +74,10 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
     ASM_CHECK(NULL != (exec = fopen(execFile, "wb")), ASM_ERROR);
 
     signature_t sign = {CPU_EXE_FORMAT, CPU_EXE_VERSION};
-    ASM_CHECK(1 == fwrite(&sign, sizeof sign, 1, exec), (fclose(exec), ASM_ERROR));
+    ASM_CHECK(1 == fwrite(&sign, sizeof sign, 1, exec), (fclose(exec), ASM_FILEERR));
     ASM_CHECK(thisAsm->codeSize == fwrite(thisAsm->code, sizeof *thisAsm->code, thisAsm->codeSize, exec),
-            (fclose(exec), ASM_ERROR));
-    ASM_CHECK(0 == fclose(exec), ASM_ERROR);
+            (fclose(exec), ASM_FILEERR));
+    ASM_CHECK(0 == fclose(exec), ASM_FILEERR);
 
 
     return ASM_SUCCESS;
