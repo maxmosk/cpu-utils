@@ -31,8 +31,14 @@ typedef struct
 
 enum CPU_CODES
 {
-    CPU_SUCCESS = 0,
-    CPU_ERROR   = 1
+    CPU_SUCCESS  = 0,
+    CPU_ERROR    = 1,
+    CPU_WRONGOP  = 2,
+    CPU_ZERODIV  = 3,
+    CPU_STACKERR = 4,
+    CPU_FILEERR  = 5,
+    CPU_ALLOCERR = 6,
+    CPU_SIGNERR  = 7
 };
 
 
