@@ -55,6 +55,58 @@ enum DASM_CODES disasmLoad(disasm_t *dasm, const char *codeFile)
 
 enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
 {
+    DASM_CHECK(NULL != dasm, DASM_ERROR);
+    DASM_CHECK(NULL != dasm->code, DASM_ERROR);
+
+    for (long int i = 0; i < dasm->codeSize; i++)
+    {
+        fprintf(file, "  %2x %16lx | ", dasm->code[i].opcode, *(uint64_t *) &dasm->code[i].data);
+        switch (dasm->code[i].opcode)
+        {
+            case CMD_HLT:
+                fprintf(file, "hlt");
+                break;
+
+            case CMD_PUSH:
+                fprintf(file, "push %lg", dasm->code[i].data);
+                break;
+
+            case CMD_ADD:
+                fprintf(file, "add");
+                break;
+
+            case CMD_SUB:
+                fprintf(file, "sub");
+                break;
+
+            case CMD_OUT:
+                fprintf(file, "out");
+                break;
+
+            case CMD_IN:
+                fprintf(file, "in");
+                break;
+
+            case CMD_MUL:
+                fprintf(file, "mul");
+                break;
+
+            case CMD_DIV:
+                fprintf(file, "div");
+                break;
+
+            case CMD_DUMP:
+                fprintf(file, "dump");
+                break;
+
+            default:
+                fprintf(file, "<<< INVALID OPCODE >>>");
+        }
+        fprintf(file, "\n");
+    }
+
+
+    return DASM_SUCCESS;
 }
 
 
