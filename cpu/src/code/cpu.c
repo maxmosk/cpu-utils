@@ -174,8 +174,15 @@ static void cpuDump(const cpu_t *cpu)
     LOGPRINTF("cpu_t [%p] dump\n", (void *) cpu);
     for (size_t i = 0; i < cpu->codeSize; i++)
     {
-        LOGPRINTF("  %hhx\n %lx", cpu->code[i].opcode, *(uint64_t *) &cpu->code[i].data);
+        LOGPRINTF("  %02X %016lX", cpu->code[i].opcode, *(uint64_t *) &cpu->code[i].data);
     }
+    LOGPRINTF("\n");
+
+    for (size_t i = 0; i <= cpu->pc; i++)
+    {
+        LOGPRINTF("  %19c", (i == cpu->pc) ? '^' : ' ');
+    }
+    LOGPRINTF("\n");
 
     CLOSELOG();   
 }
