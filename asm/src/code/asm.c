@@ -46,6 +46,10 @@ enum ASM_CODES asmDtor(asm_t *thisAsm)
 {
     ASM_CHECK(NULL != thisAsm, ASM_ERROR);
 
+    free(thisAsm->code);
+    txtFree(&thisAsm->source);
+    thisAsm->codeSize = SIZE_MAX;
+
     return ASM_SUCCESS;
 }
 
