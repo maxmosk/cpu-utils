@@ -132,6 +132,10 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
             }
                 break;
 
+            case CMD_DUMP:
+                cpuDump(cpu);
+                break;
+
             default:
                 cpuDump(cpu);
                 return CPU_ERROR;
