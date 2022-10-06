@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 #include "opcodes.h"
 #include "signature.h"
 
@@ -26,7 +27,8 @@ enum DASM_CODES
     DASM_SUCCESS  = 0,
     DASM_ERROR    = 1,
     DASM_ALLOCERR = 2,
-    DASM_SIGNERR  = 3
+    DASM_SIGNERR  = 3,
+    DASM_FILEERR  = 4
 };
 
 

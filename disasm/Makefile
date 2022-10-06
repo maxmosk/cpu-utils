@@ -42,6 +42,3 @@ $(OBJFILES): $(BUILDDIR)/%.o : $(SOURCEDIR)/%.c $(HEADFILES)
 clean:
 	rm -rf $(BUILDDIR)
 
-cleanlib:
-	rm -rf $(LIBDIR)
-
