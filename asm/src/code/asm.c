@@ -42,6 +42,13 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
     ASM_CHECK(NULL != thisAsm, ASM_ERROR);
     ASM_CHECK(NULL != execFile, ASM_ERROR);
 
+
+    for (size_t i = 0; i < thisAsm->source.quan_lines; i++)
+    {
+        char *curLine = txtGetStr(&thisAsm->source.lines[i]);
+
+        char *cmdBuf[50] = "";
+    }
     
 
     FILE *exec = NULL;
@@ -49,7 +56,8 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
 
     signature_t sign = {CPU_EXE_FORMAT, CPU_EXE_VERSION};
     ASM_CHECK(1 == fwrite(&sign, sizeof sign, 1, exec), (fclose(exec), ASM_ERROR));
-    ASM_CHECK(thisAsm->codeSize == fwrite(&sign, sizeof *thisAsm->code, thisAsm->codeSize, exec), (fclose(exec), ASM_ERROR));
+    ASM_CHECK(thisAsm->codeSize == fwrite(&sign, sizeof *thisAsm->code, thisAsm->codeSize, exec),
+            (fclose(exec), ASM_ERROR));
     ASM_CHECK(0 == fclose(exec), ASM_ERROR);
 
 
