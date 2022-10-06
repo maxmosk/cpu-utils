@@ -19,7 +19,7 @@ while (0)
 static long int cpuFileSize(const char *file);
 
 
-static void cpuDump(cpu_t *cpu);
+static void cpuDump(const cpu_t *cpu);
 
 
 
@@ -164,8 +164,19 @@ static long int cpuFileSize(const char *file)
 }
 
 
-static void cpuDump(cpu_t *cpu)
+static void cpuDump(const cpu_t *cpu)
 {
     CPU_CHECK(NULL != cpu, ;);
+    CPU_CHECK(NULL != cpu->code, ;);
+
+    OPENLOG();
+
+    LOGPRINTF("cpu_t [%p] dump\n", (void *) cpu);
+    for (size_t i = 0; i < cpu->codeSize; i++)
+    {
+        LOGPRINTF("  %hhx\n %lx", cpu->code[i].opcode, *(uint64_t *) &cpu->code[i].data);
+    }
+
+    CLOSELOG();   
 }
 
