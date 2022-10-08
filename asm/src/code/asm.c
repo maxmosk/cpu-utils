@@ -16,7 +16,7 @@ while (0)
 
 
 
-static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuData_t arg);
+static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, const char *arg);
 
 
 static enum ASM_CODES asmRemoveComment(char *str);
@@ -56,19 +56,19 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
         ASM_CHECK(ASM_ERROR != asmRemoveComment(curLine), ASM_TEXTERR);
 
         char cmdBuf[64] = "";
+        char argBuf[64] = "";
         char format[64] = "";
-        sprintf(format, "%%%zus %%lf", sizeof (cmdBuf) - 1);
+        sprintf(format, "%%%zus %%%zus", sizeof (cmdBuf) - 1, sizeof (argBuf) - 1);
 
-        cpuData_t value = NAN;
 
-        int status = sscanf(curLine, format, cmdBuf, &value);
+        int status = sscanf(curLine, format, cmdBuf, argBuf);
         if ((status == EOF) || (status == 0))
         {
             continue;
         }
         else
         {
-            ASM_CHECK(ASM_SUCCESS == asmMakeInstr(thisAsm->code + thisAsm->codeSize, cmdBuf, value),
+            ASM_CHECK(ASM_SUCCESS == asmMakeInstr(thisAsm->code + thisAsm->codeSize, cmdBuf, argBuf),
                     ASM_INSTRERR);
             thisAsm->codeSize++;
         }
@@ -102,66 +102,72 @@ enum ASM_CODES asmDtor(asm_t *thisAsm)
 }
 
 
-static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuData_t arg)
+static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, const char *arg)
 {
+    ASM_CHECK(NULL != cmd, ASM_ERROR);
+    ASM_CHECK(NULL != arg, ASM_ERROR);
+
+
     if (0 == strcmp("push", cmd))
     {
-        ASM_CHECK(IS_VALID(arg), ASM_ERROR);
         dest->opcode.cmd = CMD_PUSH;
-        dest->data = arg;
+
+        cpuData_t argVal = NAN;
+        ASM_CHECK(1 == sscanf("%lf", &argVal), ASM_ERROR);
+        dest->data = argVal;
     }
 
     else if (0 == strcmp("hlt", cmd))
     {
-        ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
+        ASM_CHECK('\0' == *arg, ASM_ERROR);
         dest->opcode.cmd = CMD_HLT;
     }
 
     else if (0 == strcmp("add", cmd))
     {
-        ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
+        ASM_CHECK('\0' == *arg, ASM_ERROR);
         dest->opcode.cmd = CMD_ADD;
     }
 
     else if (0 == strcmp("sub", cmd))
     {
-        ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
+        ASM_CHECK('\0' == *arg, ASM_ERROR);
         dest->opcode.cmd = CMD_SUB;
     }
 
     else if (0 == strcmp("out", cmd))
     {
-        ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
+        ASM_CHECK('\0' == *arg, ASM_ERROR);
         dest->opcode.cmd = CMD_OUT;
     }
 
     else if (0 == strcmp("in", cmd))
     {
-        ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
+        ASM_CHECK('\0' == *arg, ASM_ERROR);
         dest->opcode.cmd = CMD_IN;
     }
 
     else if (0 == strcmp("mul", cmd))
     {
-        ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
+        ASM_CHECK('\0' == *arg, ASM_ERROR);
         dest->opcode.cmd = CMD_MUL;
     }
 
     else if (0 == strcmp("div", cmd))
     {
-        ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
+        ASM_CHECK('\0' == *arg, ASM_ERROR);
         dest->opcode.cmd = CMD_DIV;
     }
 
     else if (0 == strcmp("dump", cmd))
     {
-        ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
+        ASM_CHECK('\0' == *arg, ASM_ERROR);
         dest->opcode.cmd = CMD_DUMP;
     }
 
     else if (0 == strcmp("dup", cmd))
     {
-        ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
+        ASM_CHECK('\0' == *arg, ASM_ERROR);
         dest->opcode.cmd = CMD_DUP;
     }
 
