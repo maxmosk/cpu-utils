@@ -99,6 +99,10 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
                 fprintf(file, "dump");
                 break;
 
+            case CMD_DUP:
+                fprintf(file, "dup");
+                break;
+
             default:
                 fprintf(file, "<<< INVALID OPCODE >>>");
         }
