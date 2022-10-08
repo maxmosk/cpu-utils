@@ -61,7 +61,7 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
     for (unsigned long int i = 0; i < dasm->codeSize; i++)
     {
         fprintf(file, "%08lX | %02X %016lX | ", i, dasm->code[i].opcode, *(uint64_t *) &dasm->code[i].data);
-        switch (dasm->code[i].opcode)
+        switch (dasm->code[i].opcode.cmd)
         {
             case CMD_HLT:
                 fprintf(file, "hlt");
