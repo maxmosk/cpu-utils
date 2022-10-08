@@ -1,7 +1,7 @@
-in
+in      ; start
 dup
 out
 out
 
-hlt
+hlt     ; stop
 
