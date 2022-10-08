@@ -154,6 +154,12 @@ enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuData_t a
         dest->opcode = CMD_DUMP;
     }
 
+    else if (0 == strcmp("dup", cmd))
+    {
+        ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
+        dest->opcode = CMD_DUP;
+    }
+
     else
     {
         return ASM_ERROR;

@@ -140,6 +140,18 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                 cpuDump(cpu);
                 break;
 
+            case CMD_DUP:
+            {
+                cpuData_t num = NAN;
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &num), CPU_STACKERR);
+
+                for (int i = 0; i < 2; i++)
+                {
+                    CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, num), CPU_STACKERR);
+                }
+            }
+                break;
+
             default:
                 cpuDump(cpu);
                 return CPU_WRONGOP;

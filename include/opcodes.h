@@ -22,6 +22,7 @@ enum CPU_OPCODES
     CMD_SUB  = 5,
     CMD_MUL  = 6,
     CMD_DIV  = 7,
+    CMD_DUP  = 8,
 
     CMD_DUMP = 99
 };
