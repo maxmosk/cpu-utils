@@ -32,7 +32,13 @@ enum CPU_OPCODES
 typedef double cpuData_t;
 
 
-typedef uint8_t cpuOpcode_t;
+typedef struct
+{
+    unsigned code : 5;
+    unsigned reg  : 1;
+    unsigned imm  : 1;
+    unsigned mem  : 1;
+} cpuOpcode_t;
 
 
 typedef struct
