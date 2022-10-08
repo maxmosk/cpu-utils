@@ -69,7 +69,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
 
     for (cpu->pc = 0; cpu->pc < cpu->codeSize; cpu->pc++)
     {
-        switch (cpu->code[cpu->pc].opcode)
+        switch (cpu->code[cpu->pc].opcode.cmd)
         {
             case CMD_HLT:
                 return CPU_SUCCESS;
