@@ -16,7 +16,11 @@ while (0)
 
 
 
-enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuData_t arg);
+static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuData_t arg);
+
+
+static enum ASM_CODES asmRemoveComments(char *str);
+
 
 
 enum ASM_CODES asmCtor(asm_t *thisAsm)
@@ -97,7 +101,7 @@ enum ASM_CODES asmDtor(asm_t *thisAsm)
 }
 
 
-enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuData_t arg)
+static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuData_t arg)
 {
     if (0 == strcmp("push", cmd))
     {
@@ -165,6 +169,20 @@ enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuData_t a
         return ASM_ERROR;
     }
 
+
+    return ASM_SUCCESS;
+}
+
+
+static enum ASM_CODES asmRemoveComments(char *str)
+{
+    ASM_CHECK(NULL != str, ASM_ERROR);
+
+    char *comStart = strchr(str, ';');
+    if (NULL != comStart)
+    {
+        *comStart = '\0';
+    }
 
     return ASM_SUCCESS;
 }
