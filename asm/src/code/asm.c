@@ -19,7 +19,7 @@ while (0)
 static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuData_t arg);
 
 
-static enum ASM_CODES asmRemoveComments(char *str);
+static enum ASM_CODES asmRemoveComment(char *str);
 
 
 
@@ -53,6 +53,7 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
     for (size_t i = 0; i < thisAsm->source.quan_lines; i++)
     {
         char *curLine = txtGetStr(&thisAsm->source.lines[i]);
+        ASM_CHECK(ASM_ERROR != asmRemoveComment(curLine), ASM_TEXTERR);
 
         char cmdBuf[64] = "";
         char format[64] = "";
@@ -174,7 +175,7 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuD
 }
 
 
-static enum ASM_CODES asmRemoveComments(char *str)
+static enum ASM_CODES asmRemoveComment(char *str)
 {
     ASM_CHECK(NULL != str, ASM_ERROR);
 
