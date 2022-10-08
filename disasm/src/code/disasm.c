@@ -58,9 +58,9 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
     DASM_CHECK(NULL != dasm, DASM_ERROR);
     DASM_CHECK(NULL != dasm->code, DASM_ERROR);
 
-    for (long int i = 0; i < dasm->codeSize; i++)
+    for (unsigned long int i = 0; i < dasm->codeSize; i++)
     {
-        fprintf(file, "  %02X %016lX | ", dasm->code[i].opcode, *(uint64_t *) &dasm->code[i].data);
+        fprintf(file, "%08lX | %02X %016lX | ", i, dasm->code[i].opcode, *(uint64_t *) &dasm->code[i].data);
         switch (dasm->code[i].opcode)
         {
             case CMD_HLT:
