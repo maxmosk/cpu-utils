@@ -107,62 +107,62 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cpuD
     if (0 == strcmp("push", cmd))
     {
         ASM_CHECK(IS_VALID(arg), ASM_ERROR);
-        dest->opcode = CMD_PUSH;
+        dest->opcode.cmd = CMD_PUSH;
         dest->data = arg;
     }
 
     else if (0 == strcmp("hlt", cmd))
     {
         ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
-        dest->opcode = CMD_HLT;
+        dest->opcode.cmd = CMD_HLT;
     }
 
     else if (0 == strcmp("add", cmd))
     {
         ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
-        dest->opcode = CMD_ADD;
+        dest->opcode.cmd = CMD_ADD;
     }
 
     else if (0 == strcmp("sub", cmd))
     {
         ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
-        dest->opcode = CMD_SUB;
+        dest->opcode.cmd = CMD_SUB;
     }
 
     else if (0 == strcmp("out", cmd))
     {
         ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
-        dest->opcode = CMD_OUT;
+        dest->opcode.cmd = CMD_OUT;
     }
 
     else if (0 == strcmp("in", cmd))
     {
         ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
-        dest->opcode = CMD_IN;
+        dest->opcode.cmd = CMD_IN;
     }
 
     else if (0 == strcmp("mul", cmd))
     {
         ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
-        dest->opcode = CMD_MUL;
+        dest->opcode.cmd = CMD_MUL;
     }
 
     else if (0 == strcmp("div", cmd))
     {
         ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
-        dest->opcode = CMD_DIV;
+        dest->opcode.cmd = CMD_DIV;
     }
 
     else if (0 == strcmp("dump", cmd))
     {
         ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
-        dest->opcode = CMD_DUMP;
+        dest->opcode.cmd = CMD_DUMP;
     }
 
     else if (0 == strcmp("dup", cmd))
     {
         ASM_CHECK(!IS_VALID(arg), ASM_ERROR);
-        dest->opcode = CMD_DUP;
+        dest->opcode.cmd = CMD_DUP;
     }
 
     else
