@@ -23,6 +23,7 @@ typedef struct
 {
     stack_t stack;
     cpuInstruction_t *code;
+    cpuNumber_t *RAM;
     size_t pc;
     long int codeSize;
 } cpu_t;

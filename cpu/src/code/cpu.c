@@ -26,6 +26,9 @@ static void cpuDump(const cpu_t *cpu);
 static const size_t stackInitSize = 100;
 
 
+static const size_t cpuRAMSize = 100;
+
+
 
 enum CPU_CODES cpuCtor(cpu_t *cpu)
 {
@@ -56,7 +59,10 @@ enum CPU_CODES cpuLoad(cpu_t *cpu, const char *codeFile)
     CPU_CHECK((size_t) codeReadStat == codeSize - sizeof (signature_t), CPU_FILEERR);
     CPU_CHECK(0 == fclose(exeFile), CPU_FILEERR);
 
+    cpu->RAM = calloc(cpuRAMSize, sizeof *cpu->RAM);
+
     cpu->codeSize = codeSize / sizeof (cpuInstruction_t);
+
 
     return CPU_SUCCESS;
 }
@@ -175,6 +181,8 @@ enum CPU_CODES cpuDtor(cpu_t *cpu)
 
     free(cpu->code);
     cpu->codeSize = -1;
+    
+    free(cpu->RAM);
     
     return CPU_SUCCESS;
 }
