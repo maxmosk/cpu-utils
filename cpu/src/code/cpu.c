@@ -103,7 +103,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
             {
                 cpuData_t num = {NAN};
                 CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &num.number), CPU_STACKERR);
-                printf("%lg\n", num.number);
+                CPU_CHECK(1 == printf("%lg\n", num.number), CPU_ERROR);
             }
                 break;
 
