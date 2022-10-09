@@ -153,6 +153,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                 break;
 
             case CMD_JMP:
+                cpu->pc = cpu->code[cpu->pc].data.number;
                 break;
 
             default:
