@@ -2,6 +2,10 @@
 
 
 
+static size_t MAX_LABELS = 64;
+
+
+
 #define ASM_CHECK(cond, ret)                                                    \
 do                                                                              \
 {                                                                               \
@@ -26,6 +30,13 @@ static enum ASM_CODES asmRemoveComment(char *str);
 enum ASM_CODES asmCtor(asm_t *thisAsm)
 {
     ASM_CHECK(NULL != thisAsm, ASM_ERROR);
+
+    thisAsm->labels = calloc(sizeof *thisAsm->labels, MAX_LABELS);
+    ASM_CHECK(NULL != thisAsm->labels, ASM_ALLOCERR);
+    for (size_t i = 0; i < MAX_LABELS; i++)
+    {
+        thisAsm->labels[i].name = NULL;
+    }
 
     return ASM_SUCCESS;
 }
@@ -94,6 +105,7 @@ enum ASM_CODES asmDtor(asm_t *thisAsm)
     ASM_CHECK(NULL != thisAsm, ASM_ERROR);
 
     free(thisAsm->code);
+    free(thisAsm->labels);
     txtFree(&thisAsm->source);
     thisAsm->codeSize = SIZE_MAX;
 
