@@ -83,7 +83,8 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
 
             case CMD_PUSH:
             {
-                cpuNumber_t num = 0;
+                cpuNumber_t num = NAN;
+
                 if (0 != cpu->code[cpu->pc].opcode.mem)
                 {
                     long long addr = 0;
@@ -99,9 +100,6 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
 
                     num = cpu->RAM[addr];
                     sleep(1);
-#if 0
-                    printf(">>> Memory read %lg by address %lld <<<\n", num, addr);
-#endif
                 }
 
                 else
@@ -216,9 +214,6 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
 
                     dst = &cpu->RAM[addr];
                     sleep(1);
-#if 0
-                    printf(">>> Memory write by address %lld <<<\n", addr);
-#endif
                 }
 
                 else if (0 != cpu->code[cpu->pc].opcode.reg)
