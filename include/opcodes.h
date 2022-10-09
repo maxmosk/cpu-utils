@@ -30,9 +30,12 @@ enum CPU_OPCODES
 
 
 
+typedef double cpuNumber_t;
+
+
 typedef union
 {
-    double number;
+    cpuNumber_t number;
     size_t address;
 } cpuData_t;
 
