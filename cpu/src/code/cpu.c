@@ -82,6 +82,19 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                 break;
 
             case CMD_PUSH:
+                cpuNumber_t num = 0;
+                if (0 != cpu->code[cpu->pc].opcode.mem)
+                {
+                }
+
+                else
+                {
+                    if (0 != cpu->code[cpu->pc].opcode.imm)
+                    {
+                        num = cpu->code[cpu->pc].data.number;
+                    }
+                }
+
                 CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, cpu->code[cpu->pc].data.number), CPU_STACKERR);
                 break;
 
