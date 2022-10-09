@@ -38,7 +38,7 @@ typedef double cpuNumber_t;
 typedef union
 {
     cpuNumber_t number;
-    long long int address;
+    long long address;
 } cpuData_t;
 
 
