@@ -143,8 +143,11 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
         dest->opcode.cmd = CMD_PUSH;
 
         cpuData_t argVal = {NAN};
-        ASM_CHECK(1 == sscanf(arg, "%lf", &argVal.number), ASM_ERROR);
-        dest->data.number = argVal.number;
+        if (1 == sscanf(arg, "%lf", &argVal.number))
+        {
+            dest->data.number = argVal.number;
+            dest->opcode.imm = 1;
+        }
     }
 
     else if (0 == strcmp("hlt", cmd))
