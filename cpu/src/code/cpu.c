@@ -86,10 +86,15 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                 cpuNumber_t num = 0;
                 if (0 != cpu->code[cpu->pc].opcode.mem)
                 {
-                    size_t addr = 0;
+                    long long int addr = 0;
+
                     if (0 != cpu->code[cpu->pc].opcode.imm)
                     {
-                        addr = cpu->code[cpu->pc].data.address;
+                        addr += cpu->code[cpu->pc].data.address;
+                    }
+                    if (0 != cpu->code[cpu->pc].opcode.reg)
+                    {
+                        addr += (long long) cpu->reg[cpu->code[cpu->pc].opcode.regNo];
                     }
 
                     num = cpu->RAM[addr];
@@ -138,7 +143,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
             {
                 cpuData_t num = {NAN};
                 CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &num.number), CPU_STACKERR);
-                CPU_CHECK(1 == printf("%lg\n", num.number), CPU_ERROR);
+                CPU_CHECK(0 != printf("%lg\n", num.number), CPU_ERROR);
             }
                 break;
 
@@ -188,7 +193,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                 break;
 
             case CMD_JMP:
-                cpu->pc = cpu->code[cpu->pc].data.number;
+                cpu->pc = cpu->code[cpu->pc].data.address;
                 break;
 
             default:
