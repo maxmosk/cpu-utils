@@ -98,8 +98,8 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                     }
 
                     num = cpu->RAM[addr];
-#if 1
-                    printf(">>> Memory read %lg by address %zu <<<\n", num, addr);
+#if 0
+                    printf(">>> Memory read %lg by address %lld <<<\n", num, addr);
 #endif
                 }
 
@@ -196,6 +196,37 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                 cpu->pc = cpu->code[cpu->pc].data.address;
                 cpu->pc--;
                 break;
+
+            case CMD_POP:
+            {
+                cpuNumber_t *dst = NULL;
+                if (0 != cpu->code[cpu->pc].opcode.mem)
+                {
+                    long long int addr = 0;
+
+                    if (0 != cpu->code[cpu->pc].opcode.imm)
+                    {
+                        addr += cpu->code[cpu->pc].data.address;
+                    }
+                    if (0 != cpu->code[cpu->pc].opcode.reg)
+                    {
+                        addr += (long long) cpu->reg[cpu->code[cpu->pc].opcode.regNo];
+                    }
+
+                    dst = &cpu->RAM[addr];
+#if 0
+                    printf(">>> Memory write by address %lld <<<\n", addr);
+#endif
+                }
+
+                else if (0 != cpu->code[cpu->pc].opcode.reg)
+                {
+                    dst = &cpu->reg[cpu->code[cpu->pc].opcode.regNo];
+                }
+             
+                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, dst), CPU_STACKERR);
+                break;
+            }
 
             default:
                 cpuDump(cpu);
