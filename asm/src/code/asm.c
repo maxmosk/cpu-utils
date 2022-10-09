@@ -171,6 +171,15 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
         dest->opcode.cmd = CMD_DUP;
     }
 
+    else if (0 == strcmp("jmp", cmd))
+    {
+        dest->opcode.cmd = CMD_JMP;
+
+        cpuData_t argVal = {SIZE_MAX};
+        ASM_CHECK(1 == sscanf(arg, "%zu", &argVal.address), ASM_ERROR);
+        dest->data.address = argVal.address;
+    }
+
     else
     {
         return ASM_ERROR;
