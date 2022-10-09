@@ -67,15 +67,14 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
     ASM_CHECK(NULL != execFile, ASM_ERROR);
 
     
-    size_t pc = 0;
-    for (size_t i = 0; i < thisAsm->source.quan_lines; i++, pc++)
+    for (size_t i = 0; i < thisAsm->source.quan_lines; i++)
     {
         char *curLine = txtGetStr(&thisAsm->source.lines[i]);
         ASM_CHECK(ASM_ERROR != asmRemoveComment(curLine), ASM_TEXTERR);
 
         if (NULL != strchr(curLine, ':'))
         {
-            ASM_CHECK(ASM_SUCCESS == asmAddLabel(curLine, thisAsm->labels, pc--), ASM_ERROR);
+            ASM_CHECK(ASM_SUCCESS == asmAddLabel(curLine, thisAsm->labels, thisAsm->codeSize), ASM_ERROR);
             continue;
         }
 
