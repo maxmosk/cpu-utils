@@ -165,6 +165,14 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
             dest->data.address = argVal.address;
         }
 
+        else if (1 == sscanf(arg, "[r%cx]", &regChar))
+        {
+            dest->opcode.reg = 1;
+            dest->opcode.mem = 1;
+            ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
+            dest->opcode.regNo = regChar - 'a';
+        }
+
         else
         {
             return ASM_ERROR;
