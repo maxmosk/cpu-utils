@@ -275,8 +275,8 @@ static enum ASM_CODES asmAddLabel(const char *label, label_t *labels, size_t add
     ASM_CHECK(i != MAX_LABELS, ASM_ERROR);
 
     labels[i].name = label;
-#if 1
-    printf(">>> Label %32s [%3zu] is %3zu <<<\n", label, addr, i);
+#if 0
+    printf(">>> Label %16s [%3zu] is %3zu <<<\n", label, addr, i);
 #endif
     labels[i].address = addr;
 
