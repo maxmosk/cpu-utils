@@ -98,7 +98,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                     }
 
                     num = cpu->RAM[addr];
-#if 0
+#if 1
                     printf(">>> Memory read %lg by address %zu <<<\n", num, addr);
 #endif
                 }

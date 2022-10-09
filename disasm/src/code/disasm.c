@@ -70,9 +70,20 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
             case CMD_PUSH:
                 if (0 != dasm->code[i].opcode.mem)
                 {
-                    if (0 != dasm->code[i].opcode.imm)
+                    printf("<<<Reg: %d Imm: %d>>>", dasm->code[i].opcode.reg, dasm->code[i].opcode.imm);
+                    if ((0 != dasm->code[i].opcode.imm) && (0 != dasm->code[i].opcode.reg))
+                    {
+                        fprintf(file, "push [%lld+r%cx]", dasm->code[i].data.address,
+                                dasm->code[i].opcode.regNo + 'a'
+                               );
+                    }
+                    else if (0 != dasm->code[i].opcode.imm)
                     {
                         fprintf(file, "push [%lld]", dasm->code[i].data.address);
+                    }
+                    else if (0 != dasm->code[i].opcode.reg)
+                    {
+                        fprintf(file, "push [r%cx]", dasm->code[i].opcode.regNo + 'a');
                     }
                 }
                 else
