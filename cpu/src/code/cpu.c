@@ -98,6 +98,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                     }
 
                     num = cpu->RAM[addr];
+                    sleep(1);
 #if 0
                     printf(">>> Memory read %lg by address %lld <<<\n", num, addr);
 #endif
@@ -214,6 +215,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                     }
 
                     dst = &cpu->RAM[addr];
+                    sleep(1);
 #if 0
                     printf(">>> Memory write by address %lld <<<\n", addr);
 #endif
