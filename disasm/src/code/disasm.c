@@ -68,7 +68,7 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
                 break;
 
             case CMD_PUSH:
-                fprintf(file, "push %lg", dasm->code[i].data);
+                fprintf(file, "push %lg", dasm->code[i].data.number);
                 break;
 
             case CMD_ADD:
