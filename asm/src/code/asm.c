@@ -66,39 +66,42 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
     ASM_CHECK(NULL != thisAsm, ASM_ERROR);
     ASM_CHECK(NULL != execFile, ASM_ERROR);
 
-    
-    for (size_t i = 0; i < thisAsm->source.quan_lines; i++)
+    for (int i = 0; i < 2; i++)
     {
-        char *curLine = txtGetStr(&thisAsm->source.lines[i]);
-        ASM_CHECK(ASM_ERROR != asmRemoveComment(curLine), ASM_TEXTERR);
+        thisAsm->codeSize = 0;
 
-        if (NULL != strchr(curLine, ':'))
+        for (size_t i = 0; i < thisAsm->source.quan_lines; i++)
         {
-            ASM_CHECK(ASM_SUCCESS == asmAddLabel(curLine, thisAsm->labels, thisAsm->codeSize), ASM_ERROR);
-            continue;
-        }
+            char *curLine = txtGetStr(&thisAsm->source.lines[i]);
+            ASM_CHECK(ASM_ERROR != asmRemoveComment(curLine), ASM_TEXTERR);
 
-        char cmdBuf[64] = "";
-        char argBuf[64] = "";
-        char format[64] = "";
-        sprintf(format, "%%%zus %%%zus", sizeof (cmdBuf) - 1, sizeof (argBuf) - 1);
+            if (NULL != strchr(curLine, ':'))
+            {
+                ASM_CHECK(ASM_SUCCESS == asmAddLabel(curLine, thisAsm->labels, thisAsm->codeSize), ASM_ERROR);
+                continue;
+            }
+
+            char cmdBuf[64] = "";
+            char argBuf[64] = "";
+            char format[64] = "";
+            sprintf(format, "%%%zus %%%zus", sizeof (cmdBuf) - 1, sizeof (argBuf) - 1);
 
 
-        int status = sscanf(curLine, format, cmdBuf, argBuf);
-        if ((status == EOF) || (status == 0))
-        {
-            continue;
+            int status = sscanf(curLine, format, cmdBuf, argBuf);
+            if ((status == EOF) || (status == 0))
+            {
+                continue;
+            }
+            else
+            {
+                ASM_CHECK(ASM_SUCCESS == asmMakeInstr(thisAsm->code + thisAsm->codeSize,
+                            cmdBuf, argBuf, thisAsm->labels),
+                            ASM_INSTRERR
+                         );
+                thisAsm->codeSize++;
+            }
         }
-        else
-        {
-            ASM_CHECK(ASM_SUCCESS == asmMakeInstr(thisAsm->code + thisAsm->codeSize,
-                        cmdBuf, argBuf, thisAsm->labels),
-                        ASM_INSTRERR
-                     );
-            thisAsm->codeSize++;
-        }
-    }
-    
+    } 
 
     FILE *exec = NULL;
     ASM_CHECK(NULL != (exec = fopen(execFile, "wb")), ASM_ERROR);
