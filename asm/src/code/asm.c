@@ -20,10 +20,13 @@ while (0)
 
 
 
-static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, const char *arg);
+static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, const char *arg, const label_t *labels);
 
 
 static enum ASM_CODES asmRemoveComment(char *str);
+
+
+static size_t asmFindLabel(const char *label, const label_t *labels);
 
 
 
@@ -79,8 +82,10 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
         }
         else
         {
-            ASM_CHECK(ASM_SUCCESS == asmMakeInstr(thisAsm->code + thisAsm->codeSize, cmdBuf, argBuf),
-                    ASM_INSTRERR);
+            ASM_CHECK(ASM_SUCCESS == asmMakeInstr(thisAsm->code + thisAsm->codeSize,
+                        cmdBuf, argBuf, thisAsm->labels),
+                        ASM_INSTRERR
+                     );
             thisAsm->codeSize++;
         }
     }
@@ -114,8 +119,9 @@ enum ASM_CODES asmDtor(asm_t *thisAsm)
 }
 
 
-static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, const char *arg)
+static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, const char *arg, const label_t *labels)
 {
+    ASM_CHECK(NULL != labels, ASM_ERROR);
     ASM_CHECK(NULL != cmd, ASM_ERROR);
     ASM_CHECK(NULL != arg, ASM_ERROR);
 
@@ -188,8 +194,14 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
         dest->opcode.cmd = CMD_JMP;
 
         cpuData_t argVal = {SIZE_MAX};
-        ASM_CHECK(1 == sscanf(arg, "%zu", &argVal.address), ASM_ERROR);
-        dest->data.address = argVal.address;
+        if (1 == sscanf(arg, "%zu", &argVal.address))
+        {
+            dest->data.address = argVal.address;
+        }
+        else if (SIZE_MAX != asmFindLabel(arg, labels))
+        {
+
+        }
     }
 
     else
@@ -213,5 +225,11 @@ static enum ASM_CODES asmRemoveComment(char *str)
     }
 
     return ASM_SUCCESS;
+}
+
+
+static size_t asmFindLabel(const char *label, const label_t *labels)
+{
+    return SIZE_MAX;
 }
 
