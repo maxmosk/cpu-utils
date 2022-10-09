@@ -82,9 +82,20 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                 break;
 
             case CMD_PUSH:
+            {
                 cpuNumber_t num = 0;
                 if (0 != cpu->code[cpu->pc].opcode.mem)
                 {
+                    size_t addr = 0;
+                    if (0 != cpu->code[cpu->pc].opcode.imm)
+                    {
+                        addr = cpu->code[cpu->pc].data.address;
+                    }
+
+                    num = cpu->RAM[addr];
+#if 0
+                    printf(">>> Memory read %lg by address %zu <<<\n", num, addr);
+#endif
                 }
 
                 else
@@ -101,6 +112,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
 
                 CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, cpu->code[cpu->pc].data.number), CPU_STACKERR);
                 break;
+            }
 
             case CMD_ADD:
             {
