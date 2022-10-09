@@ -93,6 +93,10 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                     {
                         num = cpu->code[cpu->pc].data.number;
                     }
+                    else if (0 != cpu->code[cpu->pc].opcode.reg)
+                    {
+                        num = cpu->reg[cpu->code[cpu->pc].opcode.regNo];
+                    }
                 }
 
                 CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, cpu->code[cpu->pc].data.number), CPU_STACKERR);
