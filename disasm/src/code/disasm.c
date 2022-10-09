@@ -72,7 +72,7 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
                 {
                     if (0 != dasm->code[i].opcode.imm)
                     {
-                        fprintf(file, "push [%zu]", dasm->code[i].data.address);
+                        fprintf(file, "push [%lld]", dasm->code[i].data.address);
                     }
                 }
                 else
@@ -121,7 +121,7 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
                 break;
 
             case CMD_JMP:
-                fprintf(file, "jmp %zu", dasm->code[i].data.address);
+                fprintf(file, "jmp %lld", dasm->code[i].data.address);
                 break;
 
             default:
