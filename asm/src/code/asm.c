@@ -245,7 +245,7 @@ static size_t asmFindLabel(const char *label, const label_t *labels)
     size_t labLen = strlen(label);
     for (size_t i = 0; (i < MAX_LABELS) && (NULL != labels[i].name); i++)
     {
-        if (0 == strncmp(label + 1, labels[i].name, labLen))
+        if (0 == strncmp(label, labels[i].name, labLen))
         {
             return labels[i].address;
         }
@@ -259,7 +259,12 @@ static enum ASM_CODES asmAddLabel(const char *label, label_t *labels, size_t add
 {
     ASM_CHECK(NULL != label, ASM_ERROR);
     ASM_CHECK(NULL != labels, ASM_ERROR);
-    ASM_CHECK(NULL != asmFindLabel(label, labels), ASM_SUCCESS);
+
+    if (SIZE_MAX != asmFindLabel(label, labels))
+    {
+        return ASM_SUCCESS;
+    }
+
 
     size_t i = 0;
     for (i = 0; (i < MAX_LABELS) && (labels[i].name != NULL); i++)
@@ -274,6 +279,7 @@ static enum ASM_CODES asmAddLabel(const char *label, label_t *labels, size_t add
     printf(">>> Label %32s [%3zu] is %3zu <<<\n", label, addr, i);
 #endif
     labels[i].address = addr;
+
 
     return ASM_SUCCESS;
 }
