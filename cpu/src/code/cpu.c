@@ -225,11 +225,12 @@ static void cpuDump(const cpu_t *cpu)
     LOGPRINTF("cpu_t [%p] dump\n", (void *) cpu);
     for (size_t i = 0; i < cpu->codeSize; i++)
     {
-        LOGPRINTF("  %02X (%c%c%c #%02d) %016lX",
-                    *(uint8_t *) &cpu->code[i].opcode,
+        LOGPRINTF("  %03X (%c%c%c r-%d #%02d) %016lX",
+                    *(uint16_t *) &cpu->code[i].opcode,
                     cpu->code[i].opcode.mem ? 'M' : 'm',
                     cpu->code[i].opcode.imm ? 'I' : 'i',
                     cpu->code[i].opcode.reg ? 'R' : 'r',
+                    cpu->code[i].opcode.regNo,
                     cpu->code[i].opcode.cmd,
                     *(uint64_t *) &cpu->code[i].data
                  );
@@ -238,7 +239,7 @@ static void cpuDump(const cpu_t *cpu)
 
     for (size_t i = 0; i <= cpu->pc; i++)
     {
-        LOGPRINTF("  %29c", (i == cpu->pc) ? '^' : ' ');
+        LOGPRINTF("  %33c", (i == cpu->pc) ? '^' : ' ');
     }
     LOGPRINTF("\n");
 
