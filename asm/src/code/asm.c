@@ -143,10 +143,18 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
         dest->opcode.cmd = CMD_PUSH;
 
         cpuData_t argVal = {NAN};
+        char regChar = '\0';
+
         if (1 == sscanf(arg, "%lf", &argVal.number))
         {
             dest->data.number = argVal.number;
             dest->opcode.imm = 1;
+        }
+
+        else if (1 == sscanf(arg, "r%cx", &regChar))
+        {
+            dest->opcode.reg = 1;
+            dest->opcode.regNo = regChar - 'a';
         }
     }
 
