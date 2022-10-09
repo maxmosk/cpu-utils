@@ -194,6 +194,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
 
             case CMD_JMP:
                 cpu->pc = cpu->code[cpu->pc].data.address;
+                cpu->pc--;
                 break;
 
             default:
