@@ -131,7 +131,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                 cpuData_t b = {NAN};
                 CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a.number), CPU_STACKERR);
                 CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b.number), CPU_STACKERR);
-                CPU_CHECK(abs(a.number) < 0.000001, CPU_ZERODIV);
+                CPU_CHECK(fabs(a.number) < 0.000001, CPU_ZERODIV);
                 CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, b.number / a.number), CPU_STACKERR);
             }
                 break;
