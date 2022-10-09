@@ -16,7 +16,7 @@ while (0)
 
 
 
-static long int dasmFileSize(const char *file);
+static long dasmFileSize(const char *file);
 
 
 
@@ -30,7 +30,7 @@ enum DASM_CODES disasmCtor(disasm_t *dasm)
 
 enum DASM_CODES disasmLoad(disasm_t *dasm, const char *codeFile)
 {
-    long int codeSize = dasmFileSize(codeFile);
+    long codeSize = dasmFileSize(codeFile);
 
     dasm->code = calloc((size_t) codeSize, 1);
     DASM_CHECK(NULL != dasm->code, DASM_ALLOCERR);
@@ -44,10 +44,10 @@ enum DASM_CODES disasmLoad(disasm_t *dasm, const char *codeFile)
     DASM_CHECK(signCheck(&sign), DASM_SIGNERR);
 
     size_t codeReadStat = fread(dasm->code, 1, (size_t) codeSize - sizeof (signature_t), exeFile);
-    DASM_CHECK((size_t) codeReadStat == codeSize - sizeof (signature_t), DASM_FILEERR);
+    DASM_CHECK((size_t) codeReadStat == (unsigned) codeSize - sizeof (signature_t), DASM_FILEERR);
     DASM_CHECK(0 == fclose(exeFile), DASM_FILEERR);
 
-    dasm->codeSize = codeSize / sizeof (cpuInstruction_t);
+    dasm->codeSize = codeSize / (signed) sizeof (cpuInstruction_t);
 
     return DASM_SUCCESS;
 }
@@ -58,9 +58,9 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
     DASM_CHECK(NULL != dasm, DASM_ERROR);
     DASM_CHECK(NULL != dasm->code, DASM_ERROR);
 
-    for (unsigned long int i = 0; i < dasm->codeSize; i++)
+    for (long i = 0; i < dasm->codeSize; i++)
     {
-        fprintf(file, "%08lX || %03X %016lX || ", i, *(uint16_t *) &dasm->code[i].opcode, *(uint64_t *) &dasm->code[i].data);
+        fprintf(file, "%08lX || %03X %016lX || ", (unsigned long) i, *(uint16_t *) &dasm->code[i].opcode, *(uint64_t *) &dasm->code[i].data);
         switch (dasm->code[i].opcode.cmd)
         {
             case CMD_HLT:
@@ -189,7 +189,7 @@ enum DASM_CODES disasmDtor(disasm_t *dasm)
 }
 
 
-static long int dasmFileSize(const char *file)
+static long dasmFileSize(const char *file)
 {
     struct stat buf = {0};
 
