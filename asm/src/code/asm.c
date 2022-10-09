@@ -29,6 +29,9 @@ static enum ASM_CODES asmRemoveComment(char *str);
 static size_t asmFindLabel(const char *label, const label_t *labels);
 
 
+static enum ASM_CODES asmAddLabel(const char *label, label_t *labels, size_t addr);
+
+
 
 enum ASM_CODES asmCtor(asm_t *thisAsm)
 {
@@ -68,6 +71,12 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
     {
         char *curLine = txtGetStr(&thisAsm->source.lines[i]);
         ASM_CHECK(ASM_ERROR != asmRemoveComment(curLine), ASM_TEXTERR);
+
+        if (NULL != strchr(curLine, ':'))
+        {
+            ASM_CHECK(ASM_SUCCESS == asmAddLabel(curLine, thisAsm->labels, i), ASM_ERROR);
+            continue;
+        }
 
         char cmdBuf[64] = "";
         char argBuf[64] = "";
@@ -235,12 +244,36 @@ static size_t asmFindLabel(const char *label, const label_t *labels)
 
     for (size_t i = 0; (i < MAX_LABELS) && (NULL != labels[i].name); i++)
     {
-        if (0 == strcmp(label, labels[i].name))
+        if (0 == strcmp(label + 1, labels[i].name))
         {
             return labels[i].address;
         }
     }
 
     return SIZE_MAX;
+}
+
+
+static enum ASM_CODES asmAddLabel(const char *label, label_t *labels, size_t addr)
+{
+    ASM_CHECK(NULL != label, ASM_ERROR);
+    ASM_CHECK(NULL != labels, ASM_ERROR);
+    ASM_CHECK(NULL != asmFindLabel(label, labels), ASM_SUCCESS);
+
+    size_t i = 0;
+    for (i = 0; (i < MAX_LABELS) && (labels[i].name != NULL); i++)
+    {
+        continue;
+    }
+    
+    ASM_CHECK(i != MAX_LABELS, ASM_ERROR);
+
+    labels[i].name = label;
+#if 1
+    printf(">>> Label %32s [%3zu] is %3zu <<<\n", label, addr, i);
+#endif
+    labels[i].address = addr;
+
+    return ASM_SUCCESS;
 }
 
