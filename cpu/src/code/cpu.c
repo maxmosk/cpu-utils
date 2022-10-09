@@ -16,7 +16,7 @@ while (0)
 
 
 
-static long int cpuFileSize(const char *file);
+static long cpuFileSize(const char *file);
 
 
 static void cpuDump(const cpu_t *cpu);
@@ -42,7 +42,7 @@ enum CPU_CODES cpuCtor(cpu_t *cpu)
 
 enum CPU_CODES cpuLoad(cpu_t *cpu, const char *codeFile)
 {
-    long int codeSize = cpuFileSize(codeFile);
+    long codeSize = cpuFileSize(codeFile);
 
     cpu->code = calloc((size_t) codeSize, 1);
     CPU_CHECK(NULL != cpu->code, CPU_ALLOCERR);
@@ -56,12 +56,12 @@ enum CPU_CODES cpuLoad(cpu_t *cpu, const char *codeFile)
     CPU_CHECK(signCheck(&sign), CPU_SIGNERR);
 
     size_t codeReadStat = fread(cpu->code, 1, (size_t) codeSize - sizeof (signature_t), exeFile);
-    CPU_CHECK((size_t) codeReadStat == codeSize - sizeof (signature_t), CPU_FILEERR);
+    CPU_CHECK((size_t) codeReadStat == (unsigned) codeSize - sizeof (signature_t), CPU_FILEERR);
     CPU_CHECK(0 == fclose(exeFile), CPU_FILEERR);
 
     cpu->RAM = calloc(cpuRAMSize, sizeof *cpu->RAM);
 
-    cpu->codeSize = codeSize / sizeof (cpuInstruction_t);
+    cpu->codeSize = codeSize / (signed) sizeof (cpuInstruction_t);
 
 
     return CPU_SUCCESS;
@@ -86,7 +86,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                 cpuNumber_t num = 0;
                 if (0 != cpu->code[cpu->pc].opcode.mem)
                 {
-                    long long int addr = 0;
+                    long long addr = 0;
 
                     if (0 != cpu->code[cpu->pc].opcode.imm)
                     {
@@ -203,7 +203,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
                 cpuNumber_t *dst = NULL;
                 if (0 != cpu->code[cpu->pc].opcode.mem)
                 {
-                    long long int addr = 0;
+                    long long addr = 0;
 
                     if (0 != cpu->code[cpu->pc].opcode.imm)
                     {
@@ -256,7 +256,7 @@ enum CPU_CODES cpuDtor(cpu_t *cpu)
 }
 
 
-static long int cpuFileSize(const char *file)
+static long cpuFileSize(const char *file)
 {
     struct stat buf = {0};
     
@@ -273,8 +273,8 @@ static void cpuDump(const cpu_t *cpu)
 
     OPENLOG();
 
-    LOGPRINTF("cpu_t [%p] dump\n", (void *) cpu);
-    for (size_t i = 0; i < cpu->codeSize; i++)
+    LOGPRINTF("cpu_t [%p] dump\n", (const void *) cpu);
+    for (long long i = 0; i < cpu->codeSize; i++)
     {
         LOGPRINTF("  %03X (%c%c%c r-%d #%02d) %016lX",
                     *(uint16_t *) &cpu->code[i].opcode,
@@ -288,7 +288,7 @@ static void cpuDump(const cpu_t *cpu)
     }
     LOGPRINTF("\n");
 
-    for (size_t i = 0; i <= cpu->pc; i++)
+    for (long long i = 0; i <= cpu->pc; i++)
     {
         LOGPRINTF("  %33c", (i == cpu->pc) ? '^' : ' ');
     }
