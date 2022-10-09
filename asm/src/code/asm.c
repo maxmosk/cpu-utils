@@ -158,6 +158,16 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
             dest->opcode.regNo = regChar - 'a';
         }
 
+        else if (2 == sscanf(arg, "[%lld+r%cx]",  &argVal.address, &regChar))
+        {
+            dest->opcode.reg = 1;
+            dest->opcode.imm = 1;
+            dest->opcode.mem = 1;
+            dest->data.address = argVal.address;
+            ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
+            dest->opcode.regNo = regChar - 'a';
+        }
+
         else if (1 == sscanf(arg, "[%lld]", &argVal.address))
         {
             dest->opcode.imm = 1;
@@ -169,16 +179,6 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
         {
             dest->opcode.reg = 1;
             dest->opcode.mem = 1;
-            ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
-            dest->opcode.regNo = regChar - 'a';
-        }
-
-        else if (2 == sscanf(arg, "[%lld+r%cx]",  &argVal.address, &regChar))
-        {
-            dest->opcode.reg = 1;
-            dest->opcode.imm = 1;
-            dest->opcode.mem = 1;
-            dest->data.address = argVal.address;
             ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
             dest->opcode.regNo = regChar - 'a';
         }
