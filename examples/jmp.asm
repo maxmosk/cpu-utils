@@ -5,5 +5,5 @@ dup     ; i i
 dup     ; i i i
 mul     ; i i^2
 out     ; i
-jmp 1
+jmp %1
 
