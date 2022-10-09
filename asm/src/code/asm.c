@@ -242,9 +242,10 @@ static size_t asmFindLabel(const char *label, const label_t *labels)
     ASM_CHECK(NULL != label, SIZE_MAX);
     ASM_CHECK(NULL != labels, SIZE_MAX);
 
+    size_t labLen = strlen(label);
     for (size_t i = 0; (i < MAX_LABELS) && (NULL != labels[i].name); i++)
     {
-        if (0 == strcmp(label + 1, labels[i].name))
+        if (0 == strncmp(label + 1, labels[i].name, labLen))
         {
             return labels[i].address;
         }
