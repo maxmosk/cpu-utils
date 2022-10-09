@@ -9,6 +9,7 @@
 
 
 #define IS_VALID isfinite
+#define N_REGS 4
 
 
 
