@@ -70,6 +70,10 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
             case CMD_PUSH:
                 if (0 != dasm->code[i].opcode.mem)
                 {
+                    if (0 != dasm->code[i].opcode.imm)
+                    {
+                        fprintf(file, "push [%zu]", dasm->code[i].data.address);
+                    }
                 }
                 else
                 {
