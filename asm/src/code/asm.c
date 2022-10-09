@@ -113,7 +113,7 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
         dest->opcode.cmd = CMD_PUSH;
 
         cpuData_t argVal = NAN;
-        ASM_CHECK(1 == sscanf("%lf", &argVal), ASM_ERROR);
+        ASM_CHECK(1 == sscanf(arg, "%lf", &argVal), ASM_ERROR);
         dest->data = argVal;
     }
 
