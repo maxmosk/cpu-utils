@@ -23,9 +23,17 @@
 
 typedef struct
 {
+    size_t address;
+    const char *name;
+} label_t;
+
+
+typedef struct
+{
     text_t source;
     size_t codeSize;
     cpuInstruction_t *code;
+    label_t *labels;
 } asm_t;
 
 
