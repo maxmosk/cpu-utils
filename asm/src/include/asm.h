@@ -3,6 +3,7 @@
 
 
 
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include "opcodes.h"
