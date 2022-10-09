@@ -248,7 +248,7 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
         dest->opcode.cmd = CMD_JMP;
 
         cpuData_t argVal = {.address = SIZE_MAX};
-        if (1 == sscanf(arg, "%lld", &argVal.address)) { ; }
+        if (1 == sscanf(arg, "%%%lld", &argVal.address)) { ; }
         else if (SIZE_MAX != (argVal.address = asmFindLabel(arg, labels))) { ; }
         else { ; }
 
