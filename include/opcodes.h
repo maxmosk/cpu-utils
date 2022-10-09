@@ -47,6 +47,8 @@ typedef struct
     unsigned reg : 1;
     unsigned imm : 1;
     unsigned mem : 1;
+
+    unsigned regN0 : 2;
 } cpuOpcode_t;
 
 
