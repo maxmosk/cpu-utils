@@ -255,6 +255,51 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
         dest->data.address = argVal.address;
     }
 
+    else if (0 == strcmp("pop", cmd))
+    {
+        dest->opcode.cmd = CMD_POP;
+
+        cpuData_t argVal = {NAN};
+        char regChar = '\0';
+
+        if (1 == sscanf(arg, "r%cx", &regChar))
+        {
+            dest->opcode.reg = 1;
+            ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
+            dest->opcode.regNo = regChar - 'a';
+        }
+
+        else if (2 == sscanf(arg, "[%lld+r%cx]",  &argVal.address, &regChar))
+        {
+            dest->opcode.reg = 1;
+            dest->opcode.imm = 1;
+            dest->opcode.mem = 1;
+            dest->data.address = argVal.address;
+            ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
+            dest->opcode.regNo = regChar - 'a';
+        }
+
+        else if (1 == sscanf(arg, "[%lld]", &argVal.address))
+        {
+            dest->opcode.imm = 1;
+            dest->opcode.mem = 1;
+            dest->data.address = argVal.address;
+        }
+
+        else if (1 == sscanf(arg, "[r%cx]", &regChar))
+        {
+            dest->opcode.reg = 1;
+            dest->opcode.mem = 1;
+            ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
+            dest->opcode.regNo = regChar - 'a';
+        }
+
+        else
+        {
+            return ASM_ERROR;
+        }
+    }
+ 
     else
     {
         return ASM_ERROR;
