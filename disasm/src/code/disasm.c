@@ -60,7 +60,7 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
 
     for (unsigned long int i = 0; i < dasm->codeSize; i++)
     {
-        fprintf(file, "%08lX || %02X %016lX || ", i, *(uint8_t *) &dasm->code[i].opcode, *(uint64_t *) &dasm->code[i].data);
+        fprintf(file, "%08lX || %03X %016lX || ", i, *(uint16_t *) &dasm->code[i].opcode, *(uint64_t *) &dasm->code[i].data);
         switch (dasm->code[i].opcode.cmd)
         {
             case CMD_HLT:
@@ -68,7 +68,20 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
                 break;
 
             case CMD_PUSH:
-                fprintf(file, "push %lg", dasm->code[i].data.number);
+                if (0 != dasm->code[i].opcode.mem)
+                {
+                }
+                else
+                {
+                    if (0 != dasm->code[i].opcode.imm)
+                    {
+                        fprintf(file, "push %lg", dasm->code[i].data.number);
+                    }
+                    else if (0 != dasm->code[i].opcode.reg)
+                    {
+                        fprintf(file, "push r%cx", dasm->code[i].opcode.regNo + 'a');
+                    }
+                }
                 break;
 
             case CMD_ADD:
