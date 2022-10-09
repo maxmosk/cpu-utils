@@ -103,6 +103,10 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
                 fprintf(file, "dup");
                 break;
 
+            case CMD_JMP:
+                fprintf(file, "jmp %zu", dasm->code[i].data.address);
+                break;
+
             default:
                 fprintf(file, "<<< INVALID OPCODE >>>");
         }
