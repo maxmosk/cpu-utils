@@ -193,7 +193,7 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
     {
         dest->opcode.cmd = CMD_JMP;
 
-        cpuData_t argVal = {SIZE_MAX};
+        cpuData_t argVal = {.address = SIZE_MAX};
         if (1 == sscanf(arg, "%zu", &argVal.address))
         {
             dest->data.address = argVal.address;
@@ -230,6 +230,17 @@ static enum ASM_CODES asmRemoveComment(char *str)
 
 static size_t asmFindLabel(const char *label, const label_t *labels)
 {
+    ASM_CHECK(NULL != label, SIZE_MAX);
+    ASM_CHECK(NULL != labels, SIZE_MAX);
+
+    for (size_t i = 0; (i < MAX_LABELS) && (NULL != labels[i].name); i++)
+    {
+        if (0 == strcmp(label, labels[i].name))
+        {
+            return labels[i].address;
+        }
+    }
+
     return SIZE_MAX;
 }
 
