@@ -1,7 +1,3 @@
-#ifndef __COMMANDS_H_INCLUDED__
-#define __COMMANDS_H_INCLUDED__
-
-
 /* DEFCMD(NAME, N, NARGS, CODE) */
 
 DEFCMD(HLT, 0x00, 0,
@@ -122,10 +118,10 @@ DEFCMD(DUP, 0x08, 0,
         {
             cpuNumber_t num = NAN;
 
-            CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &num.number), CPU_STACKERR);
+            CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &num), CPU_STACKERR);
             for (int i = 0; i < 2; i++)
             {
-                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, num.number), CPU_STACKERR);
+                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, num), CPU_STACKERR);
             }
         }
       )
@@ -135,8 +131,7 @@ DEFCMD(JMP, 0x09, 1,
         {
             cpu->pc = cpu->code[cpu->pc].data.address;
             cpu->pc--;
-        }
-      )
+        })
 
 
 DEFCMD(POP, 0xA0, 1,
@@ -166,16 +161,12 @@ DEFCMD(POP, 0xA0, 1,
             }
              
             CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, dst), CPU_STACKERR);
-        }
-      )
+        })
 
 
 DEFCMD(DUMP, 0x1F, 0,
         {
             cpuDump(cpu);
-        }
-      )
+        })
 
-
-#endif /* __COMMANDS_H_INCLUDED__ */
 
