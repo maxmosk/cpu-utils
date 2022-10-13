@@ -135,6 +135,14 @@ enum ASM_CODES asmDtor(asm_t *thisAsm)
 }
 
 
+static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, const char *arg, const label_t *labels)
+{
+    ASM_CHECK(NULL != dest, ASM_NULLPTR);
+    ASM_CHECK(NULL != cmd, ASM_NULLPTR);
+    ASM_CHECK(NULL != arg, ASM_NULLPTR);
+    ASM_CHECK(NULL != labels, ASM_NULLPTR);
+
+
 #define DEFCMD(cmd_name, cmd_n, cmd_n_args, ...)                     \
 if (strcasecmp(#cmd_name, cmd) == 0)                                  \
 {                                                                      \
@@ -146,16 +154,10 @@ if (strcasecmp(#cmd_name, cmd) == 0)                                  \
 }                                                                            \
 else
 
-static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, const char *arg, const label_t *labels)
-{
-    ASM_CHECK(NULL != dest, ASM_NULLPTR);
-    ASM_CHECK(NULL != cmd, ASM_NULLPTR);
-    ASM_CHECK(NULL != arg, ASM_NULLPTR);
-    ASM_CHECK(NULL != labels, ASM_NULLPTR);
-
-
 #include "commands.h"
  
+#undef DEFCMD
+
     /* else */
     {
         return ASM_ERROR;
@@ -164,7 +166,6 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
 
     return ASM_SUCCESS;
 }
-#undef DEFCMD
 
 
 static enum ASM_CODES asmRemoveComment(char *str)
