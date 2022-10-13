@@ -267,7 +267,6 @@ DEFCMD(RET, 0x12, 0,
             cpuData_t retAddr = {.address = cpu->pc};
             CPU_CHECK(STACK_ERROR != stackPop(&cpu->callstack, &retAddr.number), CPU_STACKERR);
             cpu->pc = retAddr.address;
-            cpu->pc--;
         })
 
 
