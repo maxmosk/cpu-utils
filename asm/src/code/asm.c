@@ -20,7 +20,8 @@ while (0)
 
 
 
-static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, const char *arg, const label_t *labels);
+static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd,
+                                    const char *arg, const label_t *labels);
 
 
 static enum ASM_CODES asmRemoveComment(char *str);
@@ -32,10 +33,13 @@ static size_t asmFindLabel(const char *label, const label_t *labels);
 static enum ASM_CODES asmAddLabel(const char *label, label_t *labels, size_t addr);
 
 
+static enum ASM_CODES asmSetArg(cpuInstruction_t *dest, const char *arg, const label_t *labels);
+
+
 
 enum ASM_CODES asmCtor(asm_t *thisAsm)
 {
-    ASM_CHECK(NULL != thisAsm, ASM_ERROR);
+    ASM_CHECK(NULL != thisAsm, ASM_NULLPTR);
 
     thisAsm->labels = calloc(sizeof *thisAsm->labels, MAX_LABELS);
     ASM_CHECK(NULL != thisAsm->labels, ASM_ALLOCERR);
@@ -50,8 +54,8 @@ enum ASM_CODES asmCtor(asm_t *thisAsm)
 
 enum ASM_CODES asmLoad(asm_t *thisAsm, const char *sourceFile)
 {
-    ASM_CHECK(NULL != thisAsm, ASM_ERROR);
-    ASM_CHECK(NULL != sourceFile, ASM_ERROR);
+    ASM_CHECK(NULL != thisAsm, ASM_NULLPTR);
+    ASM_CHECK(NULL != sourceFile, ASM_NULLPTR);
 
     ASM_CHECK(SUCCESS == txtRead(&thisAsm->source, sourceFile), ASM_TEXTERR);
     ASM_CHECK(NULL != (thisAsm->code = calloc(thisAsm->source.quan_lines, sizeof *thisAsm->code)), ASM_ALLOCERR);
@@ -63,8 +67,8 @@ enum ASM_CODES asmLoad(asm_t *thisAsm, const char *sourceFile)
 
 enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
 {
-    ASM_CHECK(NULL != thisAsm, ASM_ERROR);
-    ASM_CHECK(NULL != execFile, ASM_ERROR);
+    ASM_CHECK(NULL != thisAsm, ASM_NULLPTR);
+    ASM_CHECK(NULL != execFile, ASM_NULLPTR);
 
     for (int j = 0; j < 2; j++)
     {
@@ -119,7 +123,7 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
 
 enum ASM_CODES asmDtor(asm_t *thisAsm)
 {
-    ASM_CHECK(NULL != thisAsm, ASM_ERROR);
+    ASM_CHECK(NULL != thisAsm, ASM_NULLPTR);
 
     free(thisAsm->code);
     free(thisAsm->labels);
@@ -131,130 +135,23 @@ enum ASM_CODES asmDtor(asm_t *thisAsm)
 }
 
 
-#define DEFCMD(NAME, N, NARGS, ...)                              \
-if (strcasecmp(#NAME, cmd) == 0)                                  \
-{                                                                  \
-    dest->opcode.cmd = N;                                           \
-}                                                                    \
+#define DEFCMD(NAME, N, NARGS, ...)                                \
+if (strcasecmp(#NAME, cmd) == 0)                                    \
+{                                                                    \
+    dest->opcode.cmd = N;                                             \
+    ASM_CHECK(ASM_SUCCESS == asmSetArg(dest, arg, labels), ASM_ARGERR);\
+}                                                                       \
 else
 
 static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, const char *arg, const label_t *labels)
 {
-    ASM_CHECK(NULL != labels, ASM_ERROR);
-    ASM_CHECK(NULL != cmd, ASM_ERROR);
-    ASM_CHECK(NULL != arg, ASM_ERROR);
+    ASM_CHECK(NULL != dest, ASM_NULLPTR);
+    ASM_CHECK(NULL != cmd, ASM_NULLPTR);
+    ASM_CHECK(NULL != arg, ASM_NULLPTR);
+    ASM_CHECK(NULL != labels, ASM_NULLPTR);
 
 
 #include "commands.h"
-#if 0
-    if (0 == strcmp("push", cmd))
-    {
-        dest->opcode.cmd = CMD_PUSH;
-
-        cpuData_t argVal = {NAN};
-        char regChar = '\0';
-
-        if (1 == sscanf(arg, "%lf", &argVal.number))
-        {
-            dest->data.number = argVal.number;
-            dest->opcode.imm = 1;
-        }
-
-        else if (1 == sscanf(arg, "r%cx", &regChar))
-        {
-            dest->opcode.reg = 1;
-            ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
-            dest->opcode.regNo = regChar - 'a';
-        }
-
-        else if (2 == sscanf(arg, "[%lld+r%cx]",  &argVal.address, &regChar))
-        {
-            dest->opcode.reg = 1;
-            dest->opcode.imm = 1;
-            dest->opcode.mem = 1;
-            dest->data.address = argVal.address;
-            ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
-            dest->opcode.regNo = regChar - 'a';
-        }
-
-        else if (1 == sscanf(arg, "[%lld]", &argVal.address))
-        {
-            dest->opcode.imm = 1;
-            dest->opcode.mem = 1;
-            dest->data.address = argVal.address;
-        }
-
-        else if (1 == sscanf(arg, "[r%cx]", &regChar))
-        {
-            dest->opcode.reg = 1;
-            dest->opcode.mem = 1;
-            ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
-            dest->opcode.regNo = regChar - 'a';
-        }
-
-        /* else */
-        {
-            return ASM_ERROR;
-        }
-    }
-
-    else if (0 == strcmp("jmp", cmd))
-    {
-        dest->opcode.cmd = CMD_JMP;
-
-        cpuData_t argVal = {.address = LLONG_MAX};
-        if (1 == sscanf(arg, "%%%lld", &argVal.address)) { ; }
-        else if (SIZE_MAX != (argVal.address = asmFindLabel(arg, labels))) { ; }
-        else { ; }
-
-        dest->data.address = argVal.address;
-    }
-
-    else if (0 == strcmp("pop", cmd))
-    {
-        dest->opcode.cmd = CMD_POP;
-
-        cpuData_t argVal = {NAN};
-        char regChar = '\0';
-
-        if (1 == sscanf(arg, "r%cx", &regChar))
-        {
-            dest->opcode.reg = 1;
-            ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
-            dest->opcode.regNo = regChar - 'a';
-        }
-
-        else if (2 == sscanf(arg, "[%lld+r%cx]",  &argVal.address, &regChar))
-        {
-            dest->opcode.reg = 1;
-            dest->opcode.imm = 1;
-            dest->opcode.mem = 1;
-            dest->data.address = argVal.address;
-            ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
-            dest->opcode.regNo = regChar - 'a';
-        }
-
-        else if (1 == sscanf(arg, "[%lld]", &argVal.address))
-        {
-            dest->opcode.imm = 1;
-            dest->opcode.mem = 1;
-            dest->data.address = argVal.address;
-        }
-
-        else if (1 == sscanf(arg, "[r%cx]", &regChar))
-        {
-            dest->opcode.reg = 1;
-            dest->opcode.mem = 1;
-            ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
-            dest->opcode.regNo = regChar - 'a';
-        }
-
-        else
-        {
-            return ASM_ERROR;
-        }
-    }
-#endif
  
     /* else */
     {
@@ -269,7 +166,7 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
 
 static enum ASM_CODES asmRemoveComment(char *str)
 {
-    ASM_CHECK(NULL != str, ASM_ERROR);
+    ASM_CHECK(NULL != str, ASM_NULLPTR);
 
     char *comStart = strchr(str, ';');
     if (NULL != comStart)
@@ -301,8 +198,8 @@ static size_t asmFindLabel(const char *label, const label_t *labels)
 
 static enum ASM_CODES asmAddLabel(const char *label, label_t *labels, size_t addr)
 {
-    ASM_CHECK(NULL != label, ASM_ERROR);
-    ASM_CHECK(NULL != labels, ASM_ERROR);
+    ASM_CHECK(NULL != label, ASM_NULLPTR);
+    ASM_CHECK(NULL != labels, ASM_NULLPTR);
 
     if (SIZE_MAX != asmFindLabel(label, labels))
     {
@@ -319,10 +216,18 @@ static enum ASM_CODES asmAddLabel(const char *label, label_t *labels, size_t add
     ASM_CHECK(i != MAX_LABELS, ASM_ERROR);
 
     labels[i].name = label;
-#if 0
-    printf(">>> Label %16s [%3zu] is %3zu <<<\n", label, addr, i);
-#endif
     labels[i].address = addr;
+
+
+    return ASM_SUCCESS;
+}
+
+
+static enum ASM_CODES asmSetArg(cpuInstruction_t *dest, const char *arg, const label_t *labels)
+{
+    ASM_CHECK(NULL != dest, ASM_NULLPTR);
+    ASM_CHECK(NULL != arg, ASM_NULLPTR);
+    ASM_CHECK(NULL != labels, ASM_NULLPTR);
 
 
     return ASM_SUCCESS;
