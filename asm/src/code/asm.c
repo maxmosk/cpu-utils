@@ -134,9 +134,8 @@ enum ASM_CODES asmDtor(asm_t *thisAsm)
 #define DEFCMD(NAME, N, NARGS, ...)                              \
 if (strcasecmp(#NAME, cmd) == 0)                                  \
 {                                                                  \
-    printf("%s\n", #NAME);                                          \
-    dest->opcode.cmd = N;                                            \
-}                                                                     \
+    dest->opcode.cmd = N;                                           \
+}                                                                    \
 else
 
 static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, const char *arg, const label_t *labels)
