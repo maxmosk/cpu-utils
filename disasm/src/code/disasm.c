@@ -83,44 +83,6 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
 
 #undef DEFCMD
 
-#if 0
-               break;
-
-            case CMD_JMP:
-                break;
-            
-            case CMD_POP:
-                if (0 != dasm->code[i].opcode.mem)
-                {
-                    if ((0 != dasm->code[i].opcode.imm) && (0 != dasm->code[i].opcode.reg))
-                    {
-                        fprintf(file, "pop [%lld+r%cx]", dasm->code[i].data.address,
-                                dasm->code[i].opcode.regNo + 'a'
-                               );
-                    }
-                    else if (0 != dasm->code[i].opcode.imm)
-                    {
-                        fprintf(file, "pop [%lld]", dasm->code[i].data.address);
-                    }
-                    else if (0 != dasm->code[i].opcode.reg)
-                    {
-                        fprintf(file, "pop [r%cx]", dasm->code[i].opcode.regNo + 'a');
-                    }
-                }
-                else
-                {
-                    if (0 != dasm->code[i].opcode.reg)
-                    {
-                        fprintf(file, "pop r%cx", dasm->code[i].opcode.regNo + 'a');
-                    }
-                    else
-                    {
-                        fprintf(file, "<<< INVALID OPCODE >>>");
-                    }
-                }
-                break;
-#endif
-
             default:
                 fprintf(file, "<<< INVALID OPCODE >>>");
         }
@@ -159,7 +121,7 @@ static enum DASM_CODES dasmPrintArgs(FILE *ostream, const cpuInstruction_t *src)
     DASM_CHECK(NULL != ostream, DASM_NULLPTR);
     DASM_CHECK(NULL != src, DASM_NULLPTR);
 
-    if (CMD_JMP == src->opcode.cmd)
+    if (ISJMP(src->opcode.cmd))
     {
         fprintf(ostream, " %%%lld", src->data.address);
     }
