@@ -68,6 +68,12 @@ enum CPU_CODES cpuLoad(cpu_t *cpu, const char *codeFile)
 }
 
 
+#define cpu cpu
+#define DEFCMD(CMD, N, NARGS, CODE, ...)    \
+case N:                                      \
+    CODE                                      \
+    break;
+
 enum CPU_CODES cpuExec(cpu_t *cpu)
 {
     CPU_CHECK(NULL != cpu, CPU_ERROR);
@@ -77,153 +83,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
     {
         switch (cpu->code[cpu->pc].opcode.cmd)
         {
-            case CMD_HLT:
-                return CPU_SUCCESS;
-                break;
-
-            case CMD_PUSH:
-            {
-                cpuNumber_t num = NAN;
-
-                if (0 != cpu->code[cpu->pc].opcode.mem)
-                {
-                    long long addr = 0;
-
-                    if (0 != cpu->code[cpu->pc].opcode.imm)
-                    {
-                        addr += cpu->code[cpu->pc].data.address;
-                    }
-                    if (0 != cpu->code[cpu->pc].opcode.reg)
-                    {
-                        addr += (long long) cpu->reg[cpu->code[cpu->pc].opcode.regNo];
-                    }
-
-                    num = cpu->RAM[addr];
-                    sleep(1);
-                }
-
-                else
-                {
-                    if (0 != cpu->code[cpu->pc].opcode.imm)
-                    {
-                        num = cpu->code[cpu->pc].data.number;
-                    }
-                    else if (0 != cpu->code[cpu->pc].opcode.reg)
-                    {
-                        num = cpu->reg[cpu->code[cpu->pc].opcode.regNo];
-                    }
-                }
-
-                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, cpu->code[cpu->pc].data.number), CPU_STACKERR);
-                break;
-            }
-
-            case CMD_ADD:
-            {
-                cpuData_t a = {NAN};
-                cpuData_t b = {NAN};
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a.number), CPU_STACKERR);
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b.number), CPU_STACKERR);
-                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, a.number + b.number), CPU_STACKERR);
-            }
-                break;
-
-            case CMD_SUB:
-            {
-                cpuData_t a = {NAN};
-                cpuData_t b = {NAN};
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a.number), CPU_STACKERR);
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b.number), CPU_STACKERR);
-                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, b.number - a.number), CPU_STACKERR);
-            }
-                break;
-
-            case CMD_OUT:
-            {
-                cpuData_t num = {NAN};
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &num.number), CPU_STACKERR);
-                CPU_CHECK(0 != printf("%lg\n", num.number), CPU_ERROR);
-            }
-                break;
-
-            case CMD_IN:
-            {
-                cpuData_t num = {NAN};
-                CPU_CHECK(1 == scanf("%lf", &num.number), CPU_ERROR);
-                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, num.number), CPU_STACKERR);
-            }
-                break;
-
-            case CMD_MUL:
-            {
-                cpuData_t a = {NAN};
-                cpuData_t b = {NAN};
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a.number), CPU_STACKERR);
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b.number), CPU_STACKERR);
-                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, b.number * a.number), CPU_STACKERR);
-            }
-                break;
-
-            case CMD_DIV:
-            {
-                cpuData_t a = {NAN};
-                cpuData_t b = {NAN};
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a.number), CPU_STACKERR);
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b.number), CPU_STACKERR);
-                CPU_CHECK(fabs(a.number) < 0.000001, CPU_ZERODIV);
-                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, b.number / a.number), CPU_STACKERR);
-            }
-                break;
-
-            case CMD_DUMP:
-                cpuDump(cpu);
-                break;
-
-            case CMD_DUP:
-            {
-                cpuData_t num = {NAN};
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &num.number), CPU_STACKERR);
-
-                for (int i = 0; i < 2; i++)
-                {
-                    CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, num.number), CPU_STACKERR);
-                }
-            }
-                break;
-
-            case CMD_JMP:
-                cpu->pc = cpu->code[cpu->pc].data.address;
-                cpu->pc--;
-                break;
-
-            case CMD_POP:
-            {
-                cpuNumber_t *dst = NULL;
-                if (0 != cpu->code[cpu->pc].opcode.mem)
-                {
-                    long long addr = 0;
-
-                    if (0 != cpu->code[cpu->pc].opcode.imm)
-                    {
-                        addr += cpu->code[cpu->pc].data.address;
-                    }
-                    if (0 != cpu->code[cpu->pc].opcode.reg)
-                    {
-                        addr += (long long) cpu->reg[cpu->code[cpu->pc].opcode.regNo];
-                    }
-
-                    dst = &cpu->RAM[addr];
-                    sleep(1);
-                }
-
-                else if (0 != cpu->code[cpu->pc].opcode.reg)
-                {
-                    dst = &cpu->reg[cpu->code[cpu->pc].opcode.regNo];
-                }
-             
-                CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, dst), CPU_STACKERR);
-                break;
-            }
+#include <commands.h>
 
             default:
                 cpuDump(cpu);
@@ -234,6 +94,9 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
 
     return CPU_SUCCESS;
 }
+
+#undef cpu
+#undef DEFCMD
 
 
 enum CPU_CODES cpuDtor(cpu_t *cpu)
@@ -287,7 +150,7 @@ static void cpuDump(const cpu_t *cpu)
     {
         LOGPRINTF("  %33c", (i == cpu->pc) ? '^' : ' ');
     }
-    LOGPRINTF("\n");
+    LOGPRINTF(" pc = %lld \n", cpu->pc);
 
     CLOSELOG();   
 }
