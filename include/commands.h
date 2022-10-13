@@ -40,7 +40,7 @@ DEFCMD(PUSH, 0x01, 1,
                 }
             }
 
-            CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, cpu->code[cpu->pc].data.number), CPU_STACKERR);
+            CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, num), CPU_STACKERR);
         }
       )
 
@@ -264,7 +264,7 @@ DEFCMD(CALL, 0x11, 1,
 
 DEFCMD(RET, 0x12, 0,
         {
-            cpuData_t retAddr = {.address = cpu->pc};
+            cpuData_t retAddr = {.address = LLONG_MAX};
             CPU_CHECK(STACK_ERROR != stackPop(&cpu->callstack, &retAddr.number), CPU_STACKERR);
             cpu->pc = retAddr.address;
         })
