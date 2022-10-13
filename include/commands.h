@@ -132,7 +132,7 @@ DEFCMD(JMP, 0x09, 1,
         })
 
 
-DEFCMD(POP, 0xA0, 1,
+DEFCMD(POP, 0x0A, 1,
         {
             cpuNumber_t *dst = NULL;
             
@@ -161,6 +161,96 @@ DEFCMD(POP, 0xA0, 1,
             CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, dst), CPU_STACKERR);
         }
       )
+
+
+DEFCMD(JE, 0x0B, 1,
+        {
+            cpuNumber_t a = NAN;
+            cpuNumber_t b = NAN;
+
+            CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_STACKERR);
+            CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_STACKERR);
+            if (fabs(b - a) < ACCURACY)
+            {
+                cpu->pc = cpu->code[cpu->pc].data.address;
+                cpu->pc--;
+            }
+        })
+
+
+DEFCMD(JNE, 0x0C, 1,
+        {
+            cpuNumber_t a = NAN;
+            cpuNumber_t b = NAN;
+
+            CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_STACKERR);
+            CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_STACKERR);
+            if (fabs(b - a) >= ACCURACY)
+            {
+                cpu->pc = cpu->code[cpu->pc].data.address;
+                cpu->pc--;
+            }
+        })
+
+
+DEFCMD(JA, 0x0D, 1,
+        {
+            cpuNumber_t a = NAN;
+            cpuNumber_t b = NAN;
+
+            CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_STACKERR);
+            CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_STACKERR);
+            if ((fabs(b - a) >= ACCURACY) && (b > a))
+            {
+                cpu->pc = cpu->code[cpu->pc].data.address;
+                cpu->pc--;
+            }
+        })
+
+
+DEFCMD(JAE, 0x0E, 1,
+        {
+            cpuNumber_t a = NAN;
+            cpuNumber_t b = NAN;
+
+            CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_STACKERR);
+            CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_STACKERR);
+            if ((fabs(b - a) < ACCURACY) || (b > a))
+            {
+                cpu->pc = cpu->code[cpu->pc].data.address;
+                cpu->pc--;
+            }
+        })
+
+
+DEFCMD(JB, 0x0F, 1,
+        {
+            cpuNumber_t a = NAN;
+            cpuNumber_t b = NAN;
+
+            CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_STACKERR);
+            CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_STACKERR);
+            if ((fabs(b - a) >= ACCURACY) && (b < a))
+            {
+                cpu->pc = cpu->code[cpu->pc].data.address;
+                cpu->pc--;
+            }
+        })
+
+
+DEFCMD(JBE, 0x10, 1,
+        {
+            cpuNumber_t a = NAN;
+            cpuNumber_t b = NAN;
+
+            CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_STACKERR);
+            CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_STACKERR);
+            if (fabs(b - a) < ACCURACY || (b < a))
+            {
+                cpu->pc = cpu->code[cpu->pc].data.address;
+                cpu->pc--;
+            }
+        })
 
 
 DEFCMD(DUMP, 0x1F, 0,
