@@ -3,4 +3,4 @@ in
 in
 add
 out
-jmp start 
+jmp :start 
