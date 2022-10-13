@@ -281,7 +281,7 @@ static enum ASM_CODES asmSetArg(cpuInstruction_t *dest, const char *arg, const l
 
     else
     {
-        return ASM_ARGERR;
+        ;
     }
 
 
