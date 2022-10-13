@@ -135,12 +135,15 @@ enum ASM_CODES asmDtor(asm_t *thisAsm)
 }
 
 
-#define DEFCMD(NAME, N, NARGS, ...)                                \
-if (strcasecmp(#NAME, cmd) == 0)                                    \
-{                                                                    \
-    dest->opcode.cmd = N;                                             \
-    ASM_CHECK(ASM_SUCCESS == asmSetArg(dest, arg, labels), ASM_ARGERR);\
-}                                                                       \
+#define DEFCMD(cmd_name, cmd_n, cmd_n_args, ...)                     \
+if (strcasecmp(#cmd_name, cmd) == 0)                                  \
+{                                                                      \
+    dest->opcode.cmd = cmd_n;                                           \
+    if (cmd_n_args != 0)                                                 \
+    {                                                                     \
+        ASM_CHECK(ASM_SUCCESS == asmSetArg(dest, arg, labels), ASM_ARGERR);\
+    }                                                                       \
+}                                                                            \
 else
 
 static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, const char *arg, const label_t *labels)
@@ -183,10 +186,12 @@ static size_t asmFindLabel(const char *label, const label_t *labels)
     ASM_CHECK(NULL != label, SIZE_MAX);
     ASM_CHECK(NULL != labels, SIZE_MAX);
 
-    size_t labLen = strlen(label);
+    ASM_CHECK(1 == strchr(label, ':'), SIZE_MAX);
+
+    size_t labLen = strlen(label + 1);
     for (size_t i = 0; (i < MAX_LABELS) && (NULL != labels[i].name); i++)
     {
-        if (0 == strncmp(label, labels[i].name, labLen))
+        if (0 == strncmp(label + 1, labels[i].name, labLen))
         {
             return labels[i].address;
         }
@@ -228,6 +233,63 @@ static enum ASM_CODES asmSetArg(cpuInstruction_t *dest, const char *arg, const l
     ASM_CHECK(NULL != dest, ASM_NULLPTR);
     ASM_CHECK(NULL != arg, ASM_NULLPTR);
     ASM_CHECK(NULL != labels, ASM_NULLPTR);
+
+
+    cpuData_t argVal = {NAN};
+    char regChar = '\0';
+
+    if (1 == sscanf(arg, "%lf", &argVal.number))
+    {
+        dest->data.number = argVal.number;
+        dest->opcode.imm = 1;
+    }
+
+    else if (1 == sscanf(arg, "r%cx", &regChar))
+    {
+        dest->opcode.reg = 1;
+        ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
+        dest->opcode.regNo = regChar - 'a';
+    }
+
+    else if (2 == sscanf(arg, "[%lld+r%cx]",  &argVal.address, &regChar))
+    {
+        dest->opcode.reg = 1;
+        dest->opcode.imm = 1;
+        dest->opcode.mem = 1;
+        dest->data.address = argVal.address;
+        ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
+        dest->opcode.regNo = regChar - 'a';
+    }
+
+    else if (1 == sscanf(arg, "[%lld]", &argVal.address))
+    {
+        dest->opcode.imm = 1;
+        dest->opcode.mem = 1;
+        dest->data.address = argVal.address;
+    }
+
+    else if (1 == sscanf(arg, "[r%cx]", &regChar))
+    {
+        dest->opcode.reg = 1;
+        dest->opcode.mem = 1;
+        ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
+        dest->opcode.regNo = regChar - 'a';
+    }
+
+    else if (1 == sscanf(arg, "%%%lld", &argVal.address))
+    {
+        dest->data.address = argVal.address;
+    }
+    
+    else if (SIZE_MAX != (argVal.address = asmFindLabel(arg, labels)))
+    {
+        dest->data.address = argVal.address;
+    }
+
+    else
+    {
+        return ASM_ARGERR;
+    }
 
 
     return ASM_SUCCESS;
