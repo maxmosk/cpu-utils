@@ -16,23 +16,9 @@
 enum CPU_OPCODES
 {
 #include "commands.h"
-#if 0
-    CMD_HLT  = 0,
-    CMD_PUSH = 1,
-    CMD_IN   = 2,
-    CMD_OUT  = 3,
-    CMD_ADD  = 4,
-    CMD_SUB  = 5,
-    CMD_MUL  = 6,
-    CMD_DIV  = 7,
-    CMD_DUP  = 8,
-    CMD_JMP  = 9,
-    CMD_POP  = 10,
-
-    CMD_DUMP = 31
-#endif
     CMD_MAX
 };
+#undef DEFCMD
 
 
 
