@@ -1,22 +1,9 @@
 #include "asm.h"
+#include "asm_helper.h"
 
 
 
 static size_t MAX_LABELS = 64;
-
-
-
-#define ASM_CHECK(cond, ret)                                                    \
-do                                                                              \
-{                                                                               \
-    bool tmpcond_ = (cond);                                                     \
-    assert(tmpcond_);                                                           \
-    if (!(tmpcond_))                                                            \
-    {                                                                           \
-        return ret;                                                             \
-    }                                                                           \
-}                                                                               \
-while (0)
 
 
 
@@ -248,7 +235,7 @@ static enum ASM_CODES asmSetArg(cpuInstruction_t *dest, const char *arg, const l
     else if (1 == sscanf(arg, "r%cx", &regChar))
     {
         dest->opcode.reg = 1;
-        ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
+        ASM_CHECK(regChar - 'a' < N_REGS, ASM_ARGERR);
         dest->opcode.regNo = regChar - 'a';
     }
 
@@ -258,7 +245,7 @@ static enum ASM_CODES asmSetArg(cpuInstruction_t *dest, const char *arg, const l
         dest->opcode.imm = 1;
         dest->opcode.mem = 1;
         dest->data.address = argVal.address;
-        ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
+        ASM_CHECK(regChar - 'a' < N_REGS, ASM_ARGERR);
         dest->opcode.regNo = regChar - 'a';
     }
 
@@ -273,7 +260,7 @@ static enum ASM_CODES asmSetArg(cpuInstruction_t *dest, const char *arg, const l
     {
         dest->opcode.reg = 1;
         dest->opcode.mem = 1;
-        ASM_CHECK(regChar - 'a' < N_REGS, ASM_ERROR);
+        ASM_CHECK(regChar - 'a' < N_REGS, ASM_ARGERR);
         dest->opcode.regNo = regChar - 'a';
     }
 
