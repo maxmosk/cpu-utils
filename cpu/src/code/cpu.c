@@ -154,6 +154,11 @@ static void cpuDump(const cpu_t *cpu)
     }
     LOGPRINTF(" pc = %lld \n", cpu->pc);
 
+    for (int i = 0; i < N_REGS; i++)
+    {
+        LOGPRINTF(" r%cx = %lg\n", i + 'a', cpu->reg[i]);
+    }
+
     CLOSELOG();   
 }
 
