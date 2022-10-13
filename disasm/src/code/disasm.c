@@ -84,38 +84,9 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
 #undef DEFCMD
 
 #if 0
-                if (0 != dasm->code[i].opcode.mem)
-                {
-                    if ((0 != dasm->code[i].opcode.imm) && (0 != dasm->code[i].opcode.reg))
-                    {
-                        fprintf(file, "push [%lld+r%cx]", dasm->code[i].data.address,
-                                dasm->code[i].opcode.regNo + 'a'
-                               );
-                    }
-                    else if (0 != dasm->code[i].opcode.imm)
-                    {
-                        fprintf(file, "push [%lld]", dasm->code[i].data.address);
-                    }
-                    else if (0 != dasm->code[i].opcode.reg)
-                    {
-                        fprintf(file, "push [r%cx]", dasm->code[i].opcode.regNo + 'a');
-                    }
-                }
-                else
-                {
-                    if (0 != dasm->code[i].opcode.imm)
-                    {
-                        fprintf(file, "push %lg", dasm->code[i].data.number);
-                    }
-                    else if (0 != dasm->code[i].opcode.reg)
-                    {
-                        fprintf(file, "push r%cx", dasm->code[i].opcode.regNo + 'a');
-                    }
-                }
-                break;
+               break;
 
             case CMD_JMP:
-                fprintf(file, "jmp %%%lld", dasm->code[i].data.address);
                 break;
             
             case CMD_POP:
@@ -187,6 +158,43 @@ static enum DASM_CODES dasmPrintArgs(FILE *ostream, const cpuInstruction_t *src)
 {
     DASM_CHECK(NULL != ostream, DASM_NULLPTR);
     DASM_CHECK(NULL != src, DASM_NULLPTR);
+
+    if (CMD_JMP == src->opcode.cmd)
+    {
+        fprintf(ostream, " %%%lld", src->data.address);
+    }
+
+    else
+    {
+        if (0 != src->opcode.mem)
+        {
+            if ((0 != src->opcode.imm) && (0 != src->opcode.reg))
+            {
+                fprintf(ostream, " [%lld+r%cx]", src->data.address, src->opcode.regNo + 'a');
+            }
+            else if (0 != src->opcode.imm)
+            {
+                fprintf(ostream, " [%lld]", src->data.address);
+            }
+            else if (0 != src->opcode.reg)
+            {
+                fprintf(ostream, " [r%cx]", src->opcode.regNo + 'a');
+            }
+        }
+        else
+        {
+            if (0 != src->opcode.imm)
+            {
+                fprintf(ostream, " %lg", src->data.number);
+            }
+            else if (0 != src->opcode.reg)
+            {
+                fprintf(ostream, " r%cx", src->opcode.regNo + 'a');
+            }
+        }
+    }
+
+
     return DASM_SUCCESS;
 }
 
