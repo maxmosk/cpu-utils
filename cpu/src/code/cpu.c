@@ -34,6 +34,7 @@ enum CPU_CODES cpuCtor(cpu_t *cpu)
 {
     enum STACK_CODES status = STACK_ERROR;
     (status = stackCtor(&(cpu->stack), stackInitSize)) ASSERTED;
+    (status = stackCtor(&(cpu->callstack), stackInitSize)) ASSERTED;
     CPU_CHECK(STACK_ERROR != status, CPU_STACKERR);
     
     return CPU_SUCCESS;
@@ -102,6 +103,8 @@ enum CPU_CODES cpuDtor(cpu_t *cpu)
 {
     enum STACK_CODES status = STACK_ERROR;
     (status = stackDtor(&(cpu->stack))) ASSERTED;
+    CPU_CHECK(STACK_ERROR != status, CPU_STACKERR);
+    (status = stackDtor(&(cpu->callstack))) ASSERTED;
     CPU_CHECK(STACK_ERROR != status, CPU_STACKERR);
 
     free(cpu->code);

@@ -23,6 +23,7 @@
 typedef struct
 {
     stack_t stack;
+    stack_t callstack;
     cpuInstruction_t *code;
     cpuNumber_t reg[N_REGS];
     cpuNumber_t *RAM;
