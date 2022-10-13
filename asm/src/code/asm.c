@@ -66,7 +66,7 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
     ASM_CHECK(NULL != thisAsm, ASM_ERROR);
     ASM_CHECK(NULL != execFile, ASM_ERROR);
 
-    for (int i = 0; i < 2; i++)
+    for (int j = 0; j < 2; j++)
     {
         thisAsm->codeSize = 0;
 
@@ -131,6 +131,14 @@ enum ASM_CODES asmDtor(asm_t *thisAsm)
 }
 
 
+#define DEFCMD(NAME, N, NARGS, ...)                         \
+if (strcasecmp(#NAME, cmd) == 0)                             \
+{                                                             \
+    dest->opcode.cmd = N;                                      \
+    ASM_CHECK(ASM_SUCCESS == asmSetArg(dest, arg), ASM_ARGERR); \
+}                                                                \
+else
+
 static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, const char *arg, const label_t *labels)
 {
     ASM_CHECK(NULL != labels, ASM_ERROR);
@@ -138,6 +146,8 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
     ASM_CHECK(NULL != arg, ASM_ERROR);
 
 
+#include "commands.h"
+#if 0
     if (0 == strcmp("push", cmd))
     {
         dest->opcode.cmd = CMD_PUSH;
@@ -183,64 +193,10 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
             dest->opcode.regNo = regChar - 'a';
         }
 
-        else
+        /* else */
         {
             return ASM_ERROR;
         }
-    }
-
-    else if (0 == strcmp("hlt", cmd))
-    {
-        ASM_CHECK('\0' == *arg, ASM_ERROR);
-        dest->opcode.cmd = CMD_HLT;
-    }
-
-    else if (0 == strcmp("add", cmd))
-    {
-        ASM_CHECK('\0' == *arg, ASM_ERROR);
-        dest->opcode.cmd = CMD_ADD;
-    }
-
-    else if (0 == strcmp("sub", cmd))
-    {
-        ASM_CHECK('\0' == *arg, ASM_ERROR);
-        dest->opcode.cmd = CMD_SUB;
-    }
-
-    else if (0 == strcmp("out", cmd))
-    {
-        ASM_CHECK('\0' == *arg, ASM_ERROR);
-        dest->opcode.cmd = CMD_OUT;
-    }
-
-    else if (0 == strcmp("in", cmd))
-    {
-        ASM_CHECK('\0' == *arg, ASM_ERROR);
-        dest->opcode.cmd = CMD_IN;
-    }
-
-    else if (0 == strcmp("mul", cmd))
-    {
-        ASM_CHECK('\0' == *arg, ASM_ERROR);
-        dest->opcode.cmd = CMD_MUL;
-    }
-
-    else if (0 == strcmp("div", cmd))
-    {
-        ASM_CHECK('\0' == *arg, ASM_ERROR);
-        dest->opcode.cmd = CMD_DIV;
-    }
-
-    else if (0 == strcmp("dump", cmd))
-    {
-        ASM_CHECK('\0' == *arg, ASM_ERROR);
-        dest->opcode.cmd = CMD_DUMP;
-    }
-
-    else if (0 == strcmp("dup", cmd))
-    {
-        ASM_CHECK('\0' == *arg, ASM_ERROR);
-        dest->opcode.cmd = CMD_DUP;
     }
 
     else if (0 == strcmp("jmp", cmd))
@@ -299,8 +255,9 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
             return ASM_ERROR;
         }
     }
+#endif
  
-    else
+    /* else */
     {
         return ASM_ERROR;
     }
@@ -308,6 +265,7 @@ static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd, cons
 
     return ASM_SUCCESS;
 }
+#undef DEFCMD
 
 
 static enum ASM_CODES asmRemoveComment(char *str)

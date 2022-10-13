@@ -46,7 +46,8 @@ enum ASM_CODES
     ASM_ALLOCERR = 2,
     ASM_FILEERR  = 3,
     ASM_TEXTERR  = 4,
-    ASM_INSTRERR = 5
+    ASM_INSTRERR = 5,
+    ASM_ARGERR   = 6
 };
 
 
