@@ -12,9 +12,11 @@
 #define N_REGS 4
 
 
-
+#define DEFCMD(NAME, CODE, ...) CMD_##NAME = CODE,
 enum CPU_OPCODES
 {
+#include "commands.h"
+#if 0
     CMD_HLT  = 0,
     CMD_PUSH = 1,
     CMD_IN   = 2,
@@ -28,6 +30,8 @@ enum CPU_OPCODES
     CMD_POP  = 10,
 
     CMD_DUMP = 31
+#endif
+    CMD_MAX
 };
 
 
