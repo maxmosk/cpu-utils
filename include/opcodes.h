@@ -10,6 +10,7 @@
 
 #define IS_VALID isfinite
 #define N_REGS 4
+#define ACCURACY 0.0001
 
 
 #define DEFCMD(NAME, CODE, ...) CMD_##NAME = CODE,
