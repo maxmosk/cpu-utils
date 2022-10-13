@@ -10,7 +10,7 @@
 
 #define N_REGS 4
 #define ACCURACY 0.0001
-#define ISJMP(cmd) (((cmd) == CMD_JMP) || ((cmd) == CMD_JE) || ((cmd) == CMD_JNE) || ((cmd) == CMD_JA) || ((cmd) == CMD_JAE) || ((cmd) == CMD_JB) || ((cmd) == CMD_JBE))
+#define ISJMP(cmd) (((cmd) == CMD_JMP) || ((cmd) == CMD_JE) || ((cmd) == CMD_JNE) || ((cmd) == CMD_JA) || ((cmd) == CMD_JAE) || ((cmd) == CMD_JB) || ((cmd) == CMD_JBE) || ((cmd) == CMD_CALL))
 
 
 #define DEFCMD(NAME, CODE, ...) CMD_##NAME = CODE,

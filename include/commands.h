@@ -253,6 +253,24 @@ DEFCMD(JBE, 0x10, 1,
         })
 
 
+DEFCMD(CALL, 0x11, 1,
+        {
+            cpuData_t retAddr = {.address = cpu->pc};
+            CPU_CHECK(STACK_ERROR != stackPush(&cpu->callstack, retAddr.number), CPU_STACKERR);
+            cpu->pc = cpu->code[cpu->pc].data.address;
+            cpu->pc--;
+        })
+
+
+DEFCMD(RET, 0x12, 0,
+        {
+            cpuData_t retAddr = {.address = cpu->pc};
+            CPU_CHECK(STACK_ERROR != stackPop(&cpu->callstack, &retAddr.number), CPU_STACKERR);
+            cpu->pc = retAddr.address;
+            cpu->pc--;
+        })
+
+
 DEFCMD(DUMP, 0x1F, 0,
         {
             cpuDump(cpu);

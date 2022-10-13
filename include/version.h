@@ -2,7 +2,7 @@
 #define __VERSION_H_INCLUDED__
 
 
-static const uint16_t CPU_EXE_VERSION = '01';
+static const uint16_t CPU_EXE_VERSION = '11';
 
 
 
