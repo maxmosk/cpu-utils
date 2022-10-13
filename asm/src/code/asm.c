@@ -66,12 +66,6 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
             char *curLine = txtGetStr(&thisAsm->source.lines[i]);
             ASM_CHECK(ASM_ERROR != asmRemoveComment(curLine), ASM_TEXTERR);
 
-            if (NULL != strchr(curLine, ':'))
-            {
-                ASM_CHECK(ASM_SUCCESS == asmAddLabel(curLine, thisAsm->labels, thisAsm->codeSize), ASM_ERROR);
-                continue;
-            }
-
             char cmdBuf[64] = "";
             char argBuf[64] = "";
             char format[64] = "";
@@ -85,6 +79,12 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
             }
             else
             {
+                if (NULL != strchr(cmdBuf, ':'))
+                {
+                    ASM_CHECK(ASM_SUCCESS == asmAddLabel(curLine, thisAsm->labels, thisAsm->codeSize), ASM_ERROR);
+                    continue;
+                }
+
                 ASM_CHECK(ASM_SUCCESS == asmMakeInstr(thisAsm->code + thisAsm->codeSize,
                             cmdBuf, argBuf, thisAsm->labels),
                             ASM_INSTRERR
@@ -174,12 +174,17 @@ static size_t asmFindLabel(const char *label, const label_t *labels)
     ASM_CHECK(NULL != label, SIZE_MAX);
     ASM_CHECK(NULL != labels, SIZE_MAX);
 
-    ASM_CHECK(1 == strchr(label, ':'), SIZE_MAX);
+    const char *colons = strchr(label, ':');
 
-    size_t labLen = strlen(label + 1);
+    if (colons == label)
+    {
+        label++;
+    }
+
+    size_t labLen = strlen(label);
     for (size_t i = 0; (i < MAX_LABELS) && (NULL != labels[i].name); i++)
     {
-        if (0 == strncmp(label + 1, labels[i].name, labLen))
+        if (0 == strncmp(label, labels[i].name, labLen))
         {
             return labels[i].address;
         }
