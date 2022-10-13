@@ -29,7 +29,8 @@ enum DASM_CODES
     DASM_ERROR    = 1,
     DASM_ALLOCERR = 2,
     DASM_SIGNERR  = 3,
-    DASM_FILEERR  = 4
+    DASM_FILEERR  = 4,
+    DASM_NULLPTR  = 5
 };
 
 

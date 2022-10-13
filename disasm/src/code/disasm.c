@@ -19,10 +19,13 @@ while (0)
 static long dasmFileSize(const char *file);
 
 
+static enum DASM_CODES dasmPrintArgs(FILE *ostream, const cpuInstruction_t *src);
+
+
 
 enum DASM_CODES disasmCtor(disasm_t *dasm)
 {
-    DASM_CHECK(NULL != dasm, DASM_ERROR);
+    DASM_CHECK(NULL != dasm, DASM_NULLPTR);
 
     return DASM_SUCCESS;
 }
@@ -30,6 +33,9 @@ enum DASM_CODES disasmCtor(disasm_t *dasm)
 
 enum DASM_CODES disasmLoad(disasm_t *dasm, const char *codeFile)
 {
+    DASM_CHECK(NULL != dasm, DASM_NULLPTR);
+    DASM_CHECK(NULL != codeFile, DASM_NULLPTR);
+
     long codeSize = dasmFileSize(codeFile);
 
     dasm->code = calloc((size_t) codeSize, 1);
@@ -55,19 +61,29 @@ enum DASM_CODES disasmLoad(disasm_t *dasm, const char *codeFile)
 
 enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
 {
-    DASM_CHECK(NULL != dasm, DASM_ERROR);
-    DASM_CHECK(NULL != dasm->code, DASM_ERROR);
+    DASM_CHECK(NULL != dasm, DASM_NULLPTR);
+    DASM_CHECK(NULL != dasm->code, DASM_NULLPTR);
 
     for (long i = 0; i < dasm->codeSize; i++)
     {
         fprintf(file, "%08lX || %03X %016lX || ", (unsigned long) i, *(uint16_t *) &dasm->code[i].opcode, *(uint64_t *) &dasm->code[i].data);
         switch (dasm->code[i].opcode.cmd)
         {
-            case CMD_HLT:
-                fprintf(file, "hlt");
-                break;
 
-            case CMD_PUSH:
+#define DEFCMD(cmd_name, cmd_n, cmd_n_args, ...)\
+    case cmd_n:                                  \
+        fprintf(file, "%s", #cmd_name);           \
+        if (cmd_n_args != 0)                       \
+        {                                           \
+            dasmPrintArgs(file, &dasm->code[i]);     \
+        }                                             \
+        break;
+
+#include "commands.h"
+
+#undef DEFCMD
+
+#if 0
                 if (0 != dasm->code[i].opcode.mem)
                 {
                     if ((0 != dasm->code[i].opcode.imm) && (0 != dasm->code[i].opcode.reg))
@@ -96,38 +112,6 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
                         fprintf(file, "push r%cx", dasm->code[i].opcode.regNo + 'a');
                     }
                 }
-                break;
-
-            case CMD_ADD:
-                fprintf(file, "add");
-                break;
-
-            case CMD_SUB:
-                fprintf(file, "sub");
-                break;
-
-            case CMD_OUT:
-                fprintf(file, "out");
-                break;
-
-            case CMD_IN:
-                fprintf(file, "in");
-                break;
-
-            case CMD_MUL:
-                fprintf(file, "mul");
-                break;
-
-            case CMD_DIV:
-                fprintf(file, "div");
-                break;
-
-            case CMD_DUMP:
-                fprintf(file, "dump");
-                break;
-
-            case CMD_DUP:
-                fprintf(file, "dup");
                 break;
 
             case CMD_JMP:
@@ -164,7 +148,7 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
                     }
                 }
                 break;
-
+#endif
 
             default:
                 fprintf(file, "<<< INVALID OPCODE >>>");
@@ -179,7 +163,7 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
 
 enum DASM_CODES disasmDtor(disasm_t *dasm)
 {
-    DASM_CHECK(NULL != dasm, DASM_ERROR);
+    DASM_CHECK(NULL != dasm, DASM_NULLPTR);
 
     free(dasm->code);
     dasm->code = NULL;
@@ -196,5 +180,13 @@ static long dasmFileSize(const char *file)
     DASM_CHECK(-1 != stat(file, &buf), -1);
 
     return buf.st_size;
+}
+
+
+static enum DASM_CODES dasmPrintArgs(FILE *ostream, const cpuInstruction_t *src)
+{
+    DASM_CHECK(NULL != ostream, DASM_NULLPTR);
+    DASM_CHECK(NULL != src, DASM_NULLPTR);
+    return DASM_SUCCESS;
 }
 
