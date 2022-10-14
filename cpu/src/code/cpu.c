@@ -2,16 +2,16 @@
 
 
 
-#define CPU_CHECK(cond, ret)                                                    \
-do                                                                              \
-{                                                                               \
-    bool tmpcond_ = (cond);                                                     \
-    assert(tmpcond_);                                                           \
-    if (!(tmpcond_))                                                            \
-    {                                                                           \
-        return ret;                                                             \
-    }                                                                           \
-}                                                                               \
+#define CPU_CHECK(cond, ret)\
+do                           \
+{                             \
+    bool tmpcond_ = (cond);    \
+    assert(tmpcond_);           \
+    if (!(tmpcond_))             \
+    {                             \
+        return ret;                \
+    }                               \
+}                                    \
 while (0)
 
 
@@ -74,7 +74,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
     CPU_CHECK(NULL != cpu, CPU_ERROR);
     CPU_CHECK(NULL != cpu->code, CPU_ERROR);
 
-    for (cpu->pc = 0; (long) cpu->pc < cpu->codeSize; cpu->pc++)
+    for (cpu->pc = 0; cpu->pc < (cpuAddress_t) cpu->codeSize; cpu->pc++)
     {
         switch (cpu->code[cpu->pc].opcode.cmd)
         {
@@ -134,7 +134,7 @@ static void cpuDump(const cpu_t *cpu)
     OPENLOG();
 
     LOGPRINTF("cpu_t [%p] dump\n", (const void *) cpu);
-    for (cpuAddress_t pc = 0; (long) pc < cpu->codeSize; pc++)
+    for (cpuAddress_t pc = 0; pc < (cpuAddress_t) cpu->codeSize; pc++)
     {
         LOGPRINTF("  %03X (%c%c%c r-%d #%02d) %016lX",
                     *(uint16_t *) &cpu->code[pc].opcode,
