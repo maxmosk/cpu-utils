@@ -3,6 +3,15 @@
 
 
 
+#define SPELL_ZERO(var)          \
+do                                \
+{                                  \
+    memset(&(var), 0, sizeof (var));\
+}                                    \
+while (0)
+
+
+
 static const size_t MAX_LABELS = 64;
 
 static const size_t BUF_LEN = 64;
@@ -66,9 +75,14 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
             char *curLine = txtGetStr(&thisAsm->source.lines[line]);
             ASM_CHECK(ASM_ERROR != asmRemoveComment(curLine), ASM_TEXTERR);
 
-            char cmdBuf[BUF_LEN] = "";
-            char argBuf[BUF_LEN] = "";
-            char format[BUF_LEN] = "";
+
+            char cmdBuf[BUF_LEN];
+            SPELL_ZERO(cmdBuf);
+            char argBuf[BUF_LEN];
+            SPELL_ZERO(argBuf);
+            char format[BUF_LEN];
+            SPELL_ZERO(format);
+
             sprintf(format, "%%%zus %%%zus", sizeof (cmdBuf) - 1, sizeof (argBuf) - 1);
 
 
