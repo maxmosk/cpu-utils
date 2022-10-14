@@ -3,23 +3,23 @@
 
 
 #include <stdbool.h>
-#include <stdint.h>
+#include <string.h>
 #include "version.h"
 
 
-static const uint16_t CPU_EXE_FORMAT = 'PM';
+static const char CPU_EXE_FORMAT[] = "MP";
 
 
 typedef struct
 {
-    uint16_t format;
-    uint16_t version;
+    char format[2 + 1];
+    char version[2 + 1];
 } signature_t;
 
 
 static bool signCheck(signature_t *sign)
 {
-    return (CPU_EXE_FORMAT == sign->format) && (CPU_EXE_VERSION == sign->version);
+    return strcmp(CPU_EXE_FORMAT, sign->format) && strcmp(CPU_EXE_VERSION, sign->version);
 }
 
 
