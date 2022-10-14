@@ -57,13 +57,13 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
     ASM_CHECK(NULL != thisAsm, ASM_NULLPTR);
     ASM_CHECK(NULL != execFile, ASM_NULLPTR);
 
-    for (int j = 0; j < 2; j++)
+    for (int pass = 0; pass < 2; pass++)
     {
         thisAsm->codeSize = 0;
 
-        for (size_t i = 0; i < thisAsm->source.quan_lines; i++)
+        for (size_t line = 0; line < thisAsm->source.quan_lines; line++)
         {
-            char *curLine = txtGetStr(&thisAsm->source.lines[i]);
+            char *curLine = txtGetStr(&thisAsm->source.lines[line]);
             ASM_CHECK(ASM_ERROR != asmRemoveComment(curLine), ASM_TEXTERR);
 
             char cmdBuf[64] = "";
