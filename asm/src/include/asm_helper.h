@@ -3,16 +3,16 @@
 
 
 
-#define ASM_CHECK(cond, ret)                                                    \
-do                                                                              \
-{                                                                               \
-    bool tmpcond_ = (cond);                                                     \
-    assert(tmpcond_);                                                           \
-    if (!(tmpcond_))                                                            \
-    {                                                                           \
-        return ret;                                                             \
-    }                                                                           \
-}                                                                               \
+#define ASM_CHECK(cond, ret)\
+do                           \
+{                             \
+    bool tmpcond_ = (cond);    \
+    assert(tmpcond_);           \
+    if (!(tmpcond_))             \
+    {                             \
+        return ret;                \
+    }                               \
+}                                    \
 while (0)
 
 

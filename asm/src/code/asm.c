@@ -3,22 +3,22 @@
 
 
 
-static size_t MAX_LABELS = 64;
+static const size_t MAX_LABELS = 64;
+
+static const size_t BUF_LEN = 64;
+
+static const int PASS_QUAN = 2;
 
 
 
 static enum ASM_CODES asmMakeInstr(cpuInstruction_t *dest, const char *cmd,
                                     const char *arg, const label_t *labels);
 
-
 static enum ASM_CODES asmRemoveComment(char *str);
-
 
 static size_t asmFindLabel(const char *label, const label_t *labels);
 
-
 static enum ASM_CODES asmAddLabel(const char *label, label_t *labels, size_t addr);
-
 
 static enum ASM_CODES asmSetArg(cpuInstruction_t *dest, const char *arg, const label_t *labels);
 
@@ -57,7 +57,7 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
     ASM_CHECK(NULL != thisAsm, ASM_NULLPTR);
     ASM_CHECK(NULL != execFile, ASM_NULLPTR);
 
-    for (int pass = 0; pass < 2; pass++)
+    for (int pass = 0; pass < PASS_QUAN; pass++)
     {
         thisAsm->codeSize = 0;
 
@@ -66,9 +66,9 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
             char *curLine = txtGetStr(&thisAsm->source.lines[line]);
             ASM_CHECK(ASM_ERROR != asmRemoveComment(curLine), ASM_TEXTERR);
 
-            char cmdBuf[64] = "";
-            char argBuf[64] = "";
-            char format[64] = "";
+            char cmdBuf[BUF_LEN] = "";
+            char argBuf[BUF_LEN] = "";
+            char format[BUF_LEN] = "";
             sprintf(format, "%%%zus %%%zus", sizeof (cmdBuf) - 1, sizeof (argBuf) - 1);
 
 
@@ -97,7 +97,7 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
     FILE *exec = NULL;
     ASM_CHECK(NULL != (exec = fopen(execFile, "wb")), ASM_ERROR);
 
-    signature_t sign = {};
+    signature_t sign = {0};
     strcpy(sign.format, CPU_EXE_FORMAT); 
     strcpy(sign.format, CPU_EXE_VERSION); 
 

@@ -11,15 +11,13 @@ int main(int argc, char **argv)
         return 0;
     }
 
-
     asm_t assem = {0};
-    asmCtor(&assem) ASM_ASSERTED;
+    asmCtor(&assem);
 
-    asmLoad(&assem, argv[1]) ASM_ASSERTED;
-    asmBuild(&assem, argv[2]) ASM_ASSERTED;
+    asmLoad(&assem, argv[1]);
+    asmBuild(&assem, argv[2]);
 
-    asmDtor(&assem) ASM_ASSERTED;
-
+    asmDtor(&assem);
 
     return 0;
 }
