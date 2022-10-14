@@ -1,7 +1,6 @@
 in
 call :fact
 out
-out
 hlt
 
 fact:       ; n

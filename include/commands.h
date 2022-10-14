@@ -275,3 +275,9 @@ DEFCMD(DUMP, 0x1F, 0,
             cpuDump(cpu);
         })
 
+DEFCMD(MEOW, 0x13, 0,
+        {
+            printf("MEOW!\n");
+        }
+      )
+
