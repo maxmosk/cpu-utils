@@ -244,17 +244,17 @@ static enum ASM_CODES asmSetArg(cpuInstruction_t *dest, const char *arg, const l
         dest->opcode.regNo = regChar - 'a';
     }
 
-    else if (2 == sscanf(arg, "[%lld+r%cx]",  &argVal.address, &regChar))
+    else if (2 == sscanf(arg, "[%lld+r%cx]",  &argVal.integer, &regChar))
     {
         dest->opcode.reg = 1;
         dest->opcode.imm = 1;
         dest->opcode.mem = 1;
-        dest->data.address = argVal.address;
+        dest->data.integer = argVal.integer;
         ASM_CHECK(regChar - 'a' < N_REGS, ASM_ARGERR);
         dest->opcode.regNo = regChar - 'a';
     }
 
-    else if (1 == sscanf(arg, "[%lld]", &argVal.address))
+    else if (1 == sscanf(arg, "[%zu]", &argVal.address))
     {
         dest->opcode.imm = 1;
         dest->opcode.mem = 1;
@@ -269,7 +269,7 @@ static enum ASM_CODES asmSetArg(cpuInstruction_t *dest, const char *arg, const l
         dest->opcode.regNo = regChar - 'a';
     }
 
-    else if (1 == sscanf(arg, "%%%lld", &argVal.address))
+    else if (1 == sscanf(arg, "%%%zu", &argVal.address))
     {
         dest->data.address = argVal.address;
     }

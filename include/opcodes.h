@@ -25,11 +25,16 @@ enum CPU_OPCODES
 
 typedef double cpuNumber_t;
 
+typedef size_t cpuAddress_t;
+
+typedef long long cpuInteger_t;
+
 
 typedef union
 {
     cpuNumber_t number;
-    long long address;
+    cpuAddress_t address;
+    cpuInteger_t integer;
 } cpuData_t;
 
 
