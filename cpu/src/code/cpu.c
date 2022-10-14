@@ -69,6 +69,12 @@ enum CPU_CODES cpuLoad(cpu_t *cpu, const char *codeFile)
 }
 
 
+#define DEFJMP DEFCMD
+#define DEFCMD(cmd_name, cmd_n, cmd_n_args, cmd_code)\
+    case cmd_n:                                       \
+        cmd_code;                                      \
+        break;
+
 enum CPU_CODES cpuExec(cpu_t *cpu)
 {
     CPU_CHECK(NULL != cpu, CPU_ERROR);
@@ -79,14 +85,7 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
         switch (cpu->code[cpu->pc].opcode.cmd)
         {
 
-#define DEFCMD(cmd_name, cmd_n, cmd_n_args, cmd_code)\
-    case cmd_n:                                       \
-        cmd_code;                                      \
-        break;
-
 #include "commands.h"
-
-#undef DEFCMD
 
             default:
                 cpuDump(cpu);
@@ -97,6 +96,9 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
 
     return CPU_SUCCESS;
 }
+
+#undef DEFCMD
+#undef DEFJMP
 
 
 enum CPU_CODES cpuDtor(cpu_t *cpu)

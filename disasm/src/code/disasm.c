@@ -2,16 +2,16 @@
 
 
 
-#define DASM_CHECK(cond, ret)                                                   \
-do                                                                              \
-{                                                                               \
-    bool tmpcond_ = (cond);                                                     \
-    assert(tmpcond_);                                                           \
-    if (!(tmpcond_))                                                            \
-    {                                                                           \
-        return ret;                                                             \
-    }                                                                           \
-}                                                                               \
+#define DASM_CHECK(cond, ret)\
+do                            \
+{                              \
+    bool tmpcond_ = (cond);     \
+    assert(tmpcond_);            \
+    if (!(tmpcond_))              \
+    {                              \
+        return ret;                 \
+    }                                \
+}                                     \
 while (0)
 
 
@@ -59,6 +59,24 @@ enum DASM_CODES disasmLoad(disasm_t *dasm, const char *codeFile)
 }
 
 
+#define DEFCMD(cmd_name, cmd_n, cmd_n_args, ...)\
+    case cmd_n:                                  \
+        fprintf(file, "%s", #cmd_name);           \
+        if (cmd_n_args != 0)                       \
+        {                                           \
+            dasmPrintArgs(file, &dasm->code[i]);     \
+        }                                             \
+        break;
+
+#define DEFJMP(cmd_name, cmd_n, cmd_n_args, ...)\
+    case cmd_n:                                  \
+        fprintf(file, "%s", #cmd_name);           \
+        if (cmd_n_args != 0)                       \
+        {                                           \
+            fprintf(file, " %zu", dasm->code[i].data.address);     \
+        }                                             \
+        break;
+
 enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
 {
     DASM_CHECK(NULL != dasm, DASM_NULLPTR);
@@ -70,18 +88,7 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
         switch (dasm->code[i].opcode.cmd)
         {
 
-#define DEFCMD(cmd_name, cmd_n, cmd_n_args, ...)\
-    case cmd_n:                                  \
-        fprintf(file, "%s", #cmd_name);           \
-        if (cmd_n_args != 0)                       \
-        {                                           \
-            dasmPrintArgs(file, &dasm->code[i]);     \
-        }                                             \
-        break;
-
 #include "commands.h"
-
-#undef DEFCMD
 
             default:
                 fprintf(file, "<<< INVALID OPCODE >>>");
@@ -92,6 +99,9 @@ enum DASM_CODES disasmWrite(disasm_t *dasm, FILE *file)
 
     return DASM_SUCCESS;
 }
+
+#undef DEFCMD
+#undef DEFJMP
 
 
 enum DASM_CODES disasmDtor(disasm_t *dasm)
@@ -121,41 +131,33 @@ static enum DASM_CODES dasmPrintArgs(FILE *ostream, const cpuInstruction_t *src)
     DASM_CHECK(NULL != ostream, DASM_NULLPTR);
     DASM_CHECK(NULL != src, DASM_NULLPTR);
 
-    if (ISJMP(src->opcode.cmd))
+    if (0 != src->opcode.mem)
     {
-        fprintf(ostream, " %%%zu", src->data.address);
+        if ((0 != src->opcode.imm) && (0 != src->opcode.reg))
+        {
+            fprintf(ostream, " [%lld+r%cx]", src->data.integer, src->opcode.regNo + 'a');
+        }
+        else if (0 != src->opcode.imm)
+        {
+            fprintf(ostream, " [%zu]", src->data.address);
+        }
+        else if (0 != src->opcode.reg)
+        {
+            fprintf(ostream, " [r%cx]", src->opcode.regNo + 'a');
+        }
     }
-
     else
     {
-        if (0 != src->opcode.mem)
+        if (0 != src->opcode.imm)
         {
-            if ((0 != src->opcode.imm) && (0 != src->opcode.reg))
-            {
-                fprintf(ostream, " [%lld+r%cx]", src->data.integer, src->opcode.regNo + 'a');
-            }
-            else if (0 != src->opcode.imm)
-            {
-                fprintf(ostream, " [%zu]", src->data.address);
-            }
-            else if (0 != src->opcode.reg)
-            {
-                fprintf(ostream, " [r%cx]", src->opcode.regNo + 'a');
-            }
+            fprintf(ostream, " %lg", src->data.number);
         }
-        else
+        else if (0 != src->opcode.reg)
         {
-            if (0 != src->opcode.imm)
-            {
-                fprintf(ostream, " %lg", src->data.number);
-            }
-            else if (0 != src->opcode.reg)
-            {
-                fprintf(ostream, " r%cx", src->opcode.regNo + 'a');
-            }
+            fprintf(ostream, " r%cx", src->opcode.regNo + 'a');
         }
     }
-
+    
 
     return DASM_SUCCESS;
 }

@@ -125,7 +125,7 @@ DEFCMD(DUP, 0x08, 0,
       )
 
 
-DEFCMD(JMP, 0x09, 1,
+DEFJMP(JMP, 0x09, 1,
         {
             cpu->pc = cpu->code[cpu->pc].data.address;
             cpu->pc--;
@@ -163,7 +163,7 @@ DEFCMD(POP, 0x0A, 1,
       )
 
 
-DEFCMD(JE, 0x0B, 1,
+DEFJMP(JE, 0x0B, 1,
         {
             cpuNumber_t a = NAN;
             cpuNumber_t b = NAN;
@@ -178,7 +178,7 @@ DEFCMD(JE, 0x0B, 1,
         })
 
 
-DEFCMD(JNE, 0x0C, 1,
+DEFJMP(JNE, 0x0C, 1,
         {
             cpuNumber_t a = NAN;
             cpuNumber_t b = NAN;
@@ -193,7 +193,7 @@ DEFCMD(JNE, 0x0C, 1,
         })
 
 
-DEFCMD(JA, 0x0D, 1,
+DEFJMP(JA, 0x0D, 1,
         {
             cpuNumber_t a = NAN;
             cpuNumber_t b = NAN;
@@ -208,7 +208,7 @@ DEFCMD(JA, 0x0D, 1,
         })
 
 
-DEFCMD(JAE, 0x0E, 1,
+DEFJMP(JAE, 0x0E, 1,
         {
             cpuNumber_t a = NAN;
             cpuNumber_t b = NAN;
@@ -223,7 +223,7 @@ DEFCMD(JAE, 0x0E, 1,
         })
 
 
-DEFCMD(JB, 0x0F, 1,
+DEFJMP(JB, 0x0F, 1,
         {
             cpuNumber_t a = NAN;
             cpuNumber_t b = NAN;
@@ -238,7 +238,7 @@ DEFCMD(JB, 0x0F, 1,
         })
 
 
-DEFCMD(JBE, 0x10, 1,
+DEFJMP(JBE, 0x10, 1,
         {
             cpuNumber_t a = NAN;
             cpuNumber_t b = NAN;
@@ -253,7 +253,7 @@ DEFCMD(JBE, 0x10, 1,
         })
 
 
-DEFCMD(CALL, 0x11, 1,
+DEFJMP(CALL, 0x11, 1,
         {
             cpuData_t retAddr = {.address = cpu->pc};
             CPU_CHECK(STACK_ERROR != stackPush(&cpu->callstack, retAddr.number), CPU_STACKERR);
@@ -274,6 +274,7 @@ DEFCMD(DUMP, 0x1F, 0,
         {
             cpuDump(cpu);
         })
+
 
 DEFCMD(MEOW, 0x13, 0,
         {
