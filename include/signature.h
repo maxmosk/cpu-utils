@@ -1,5 +1,5 @@
-#ifndef __SIGNATURE_H_INCLUDED__
-#define __SIGNATURE_H_INCLUDED__
+#ifndef SIGNATURE_H_INCLUDED__
+#define SIGNATURE_H_INCLUDED__
 
 
 #include <stdbool.h>
@@ -23,5 +23,5 @@ static bool signCheck(signature_t *sign)
 }
 
 
-#endif /* __SIGNATURE_H_INCLUDED__ */
+#endif /* SIGNATURE_H_INCLUDED__ */
 

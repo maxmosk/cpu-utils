@@ -1,5 +1,5 @@
-#ifndef __CPU_H_INCLUDED__
-#define __CPU_H_INCLUDED__
+#ifndef CPU_H_INCLUDED__
+#define CPU_H_INCLUDED__
 
 
 
@@ -61,5 +61,5 @@ enum CPU_CODES cpuDtor(cpu_t *cpu);
 
 
 
-#endif /* __CPU_H_INCLUDED__ */
+#endif /* CPU_H_INCLUDED__ */
 

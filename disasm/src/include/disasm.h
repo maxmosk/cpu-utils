@@ -1,5 +1,5 @@
-#ifndef __DISASM_H_INCLUDED__
-#define __DISASM_H_INCLUDED__
+#ifndef DISASM_H_INCLUDED__
+#define DISASM_H_INCLUDED__
 
 
 
@@ -48,5 +48,5 @@ enum DASM_CODES disasmDtor(disasm_t *dasm);
 
 
 
-#endif /* __DISASM_H_INCLUDED__ */
+#endif /* DISASM_H_INCLUDED__ */
 

@@ -1,5 +1,5 @@
-#ifndef __ASM_HELPER_H_INCLUDED__
-#define __ASM_HELPER_H_INCLUDED__
+#ifndef ASM_HELPER_H_INCLUDED__
+#define ASM_HELPER_H_INCLUDED__
 
 
 
@@ -17,4 +17,4 @@ while (0)
 
 
 
-#endif /* __ASM_HELPER_H_INCLUDED__ */
+#endif /* ASM_HELPER_H_INCLUDED__ */
