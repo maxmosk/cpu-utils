@@ -123,7 +123,7 @@ static enum DASM_CODES dasmPrintArgs(FILE *ostream, const cpuInstruction_t *src)
 
     if (ISJMP(src->opcode.cmd))
     {
-        fprintf(ostream, " %%%lld", src->data.address);
+        fprintf(ostream, " %%%zu", src->data.address);
     }
 
     else
@@ -132,11 +132,11 @@ static enum DASM_CODES dasmPrintArgs(FILE *ostream, const cpuInstruction_t *src)
         {
             if ((0 != src->opcode.imm) && (0 != src->opcode.reg))
             {
-                fprintf(ostream, " [%lld+r%cx]", src->data.address, src->opcode.regNo + 'a');
+                fprintf(ostream, " [%lld+r%cx]", src->data.integer, src->opcode.regNo + 'a');
             }
             else if (0 != src->opcode.imm)
             {
-                fprintf(ostream, " [%lld]", src->data.address);
+                fprintf(ostream, " [%zu]", src->data.address);
             }
             else if (0 != src->opcode.reg)
             {

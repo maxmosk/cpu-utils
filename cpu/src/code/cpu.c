@@ -134,25 +134,25 @@ static void cpuDump(const cpu_t *cpu)
     OPENLOG();
 
     LOGPRINTF("cpu_t [%p] dump\n", (const void *) cpu);
-    for (long long i = 0; i < cpu->codeSize; i++)
+    for (cpuAddress_t pc = 0; pc < cpu->codeSize; pc++)
     {
         LOGPRINTF("  %03X (%c%c%c r-%d #%02d) %016lX",
-                    *(uint16_t *) &cpu->code[i].opcode,
-                    cpu->code[i].opcode.mem ? 'M' : 'm',
-                    cpu->code[i].opcode.imm ? 'I' : 'i',
-                    cpu->code[i].opcode.reg ? 'R' : 'r',
-                    cpu->code[i].opcode.regNo,
-                    cpu->code[i].opcode.cmd,
-                    *(uint64_t *) &cpu->code[i].data
+                    *(uint16_t *) &cpu->code[pc].opcode,
+                    cpu->code[pc].opcode.mem ? 'M' : 'm',
+                    cpu->code[pc].opcode.imm ? 'I' : 'i',
+                    cpu->code[pc].opcode.reg ? 'R' : 'r',
+                    cpu->code[pc].opcode.regNo,
+                    cpu->code[pc].opcode.cmd,
+                    *(uint64_t *) &cpu->code[pc].data
                  );
     }
     LOGPRINTF("\n");
 
-    for (long long i = 0; i <= cpu->pc; i++)
+    for (cpuAddress_t pc = 0; pc <= cpu->pc; pc++)
     {
-        LOGPRINTF("  %33c", (i == cpu->pc) ? '^' : ' ');
+        LOGPRINTF("  %33c", (pc == cpu->pc) ? '^' : ' ');
     }
-    LOGPRINTF(" pc = %lld \n", cpu->pc);
+    LOGPRINTF(" pc = %zu\n", cpu->pc);
 
     for (int i = 0; i < N_REGS; i++)
     {

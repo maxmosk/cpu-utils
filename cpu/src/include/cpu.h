@@ -28,7 +28,7 @@ typedef struct
     cpuInstruction_t *code;
     cpuNumber_t reg[N_REGS];
     cpuNumber_t *RAM;
-    long long pc;
+    size_t pc;
     long codeSize;
 } cpu_t;
 

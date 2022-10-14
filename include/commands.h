@@ -13,7 +13,7 @@ DEFCMD(PUSH, 0x01, 1,
 
             if (0 != cpu->code[cpu->pc].opcode.mem)
             {
-                long long addr = 0;
+                cpuAddress_t addr = 0;
 
                 if (0 != cpu->code[cpu->pc].opcode.imm)
                 {
@@ -21,7 +21,7 @@ DEFCMD(PUSH, 0x01, 1,
                 }
                 if (0 != cpu->code[cpu->pc].opcode.reg)
                 {
-                    addr += (long long) cpu->reg[cpu->code[cpu->pc].opcode.regNo];
+                    addr += (cpuAddress_t) cpu->reg[cpu->code[cpu->pc].opcode.regNo];
                 }
 
                 num = cpu->RAM[addr];
@@ -138,7 +138,7 @@ DEFCMD(POP, 0x0A, 1,
             
             if (0 != cpu->code[cpu->pc].opcode.mem)
             {
-                long long addr = 0;
+                cpuAddress_t addr = 0;
 
                 if (0 != cpu->code[cpu->pc].opcode.imm)
                 {
@@ -146,7 +146,7 @@ DEFCMD(POP, 0x0A, 1,
                 }
                 if (0 != cpu->code[cpu->pc].opcode.reg)
                 {
-                    addr += (long long) cpu->reg[cpu->code[cpu->pc].opcode.regNo];
+                    addr += (cpuAddress_t) cpu->reg[cpu->code[cpu->pc].opcode.regNo];
                 }
 
                 dst = &cpu->RAM[addr];
@@ -264,7 +264,7 @@ DEFCMD(CALL, 0x11, 1,
 
 DEFCMD(RET, 0x12, 0,
         {
-            cpuData_t retAddr = {.address = LLONG_MAX};
+            cpuData_t retAddr = {.address = SIZE_MAX};
             CPU_CHECK(STACK_ERROR != stackPop(&cpu->callstack, &retAddr.number), CPU_STACKERR);
             cpu->pc = retAddr.address;
         })
