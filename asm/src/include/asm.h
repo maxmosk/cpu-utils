@@ -1,5 +1,5 @@
-#ifndef __ASM_H_INCLUDED__
-#define __ASM_H_INCLUDED__
+#ifndef ASM_H_INCLUDED__
+#define ASM_H_INCLUDED__
 
 
 
@@ -65,5 +65,5 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile);
 enum ASM_CODES asmDtor(asm_t *thisAsm);
 
 
-#endif /* __ASM_H_INCLUDED__ */
+#endif /* ASM_H_INCLUDED__ */
 
