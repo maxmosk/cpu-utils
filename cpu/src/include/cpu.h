@@ -17,10 +17,6 @@
 
 
 
-#define CPU_ASSERTED ASSERTED
-
-
-
 typedef struct
 {
     stack_t stack;

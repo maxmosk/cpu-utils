@@ -6,7 +6,7 @@ CFLAGS_WARNINGS=-Wall -Wextra -Wfloat-equal -Wundef -Wshadow -Wpointer-arith \
     -Wpointer-arith -Wold-style-definition -Wstrict-prototypes \
     -Wmissing-prototypes -Werror-implicit-function-declaration -Wlogical-op \
     -Wduplicated-cond -Wcast-qual -Wcast-align -Wformat-security \
-    -Wlarger-than=32768 -Wstack-usage=8192 -Wmissing-declarations \
+    -Wlarger-than=32768 -Wmissing-declarations \
     -Wchar-subscripts -Wno-varargs -Wunused -Wvariadic-macros \
     -Wno-missing-field-initializers -Wno-narrowing -Wswitch-default \
     -Wsync-nand -Wsuggest-final-types -Wsign-conversion \
