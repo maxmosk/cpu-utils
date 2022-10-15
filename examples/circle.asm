@@ -18,10 +18,10 @@ mul             ; x X_SIZE*y
 push rdx        ; x X_SIZE*y x
 add             ; x X_SIZE*y+x
 pop rdx         ; x
-push 32         ; x 32
+push 49         ; x 49
 pop [rdx]       ; x
-dup
-pop rdx
+dup             ; x x
+pop rdx         ; x
 
 
 call :dist      ; x d
@@ -42,7 +42,6 @@ push 1          ; x 1
 add             ; x+1
 dup             ; x+1 x+1
 pop rdx         ; x+1
-
 push rax        ; x+1 X_SIZE
 jbe :x_start
 
@@ -52,7 +51,6 @@ add             ; y+1
 dup             ; y+1 y+1
 pop rcx         ; y+1
 push rbx        ; y+1 Y_SIZE
-
 print
 jbe :y_start
 
