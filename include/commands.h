@@ -106,7 +106,7 @@ DEFCMD(DIV, 0x07, 0,
 
             CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &a), CPU_STACKERR);
             CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &b), CPU_STACKERR);
-            CPU_CHECK(fabs(a) < ACCURACY, CPU_ZERODIV);
+            CPU_CHECK(fabs(a) >= ACCURACY, CPU_ZERODIV);
             CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, b / a), CPU_STACKERR);
         }
       )
