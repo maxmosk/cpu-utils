@@ -3,6 +3,20 @@
 
 
 
+#define CHECK(expr, pcpu)           \
+do                                   \
+{                                     \
+    int status = (expr);               \
+    if (CPU_SUCCESS != status)          \
+    {                                    \
+        printf("Expression %s\n", #expr); \
+        cpuPrintError(pcpu, status);       \
+    }                                       \
+}                                            \
+while (0)
+
+
+
 int main(int argc, char **argv)
 {
     if (2 != argc)
@@ -12,10 +26,10 @@ int main(int argc, char **argv)
     }
 
     cpu_t myCPU = {0};
-    cpuCtor(&myCPU);
-    cpuLoad(&myCPU, argv[1]);
-    cpuExec(&myCPU);
-    cpuDtor(&myCPU);
+    CHECK(cpuCtor(&myCPU), &myCPU);
+    CHECK(cpuLoad(&myCPU, argv[1]), &myCPU);
+    CHECK(cpuExec(&myCPU), &myCPU);
+    CHECK(cpuDtor(&myCPU), &myCPU);
 
     return 0;
 }

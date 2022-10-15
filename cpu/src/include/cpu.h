@@ -57,6 +57,9 @@ enum CPU_CODES cpuExec(cpu_t *cpu);
 enum CPU_CODES cpuDtor(cpu_t *cpu);
 
 
+void cpuPrintError(const cpu_t *cpu, enum CPU_CODES code);
+
+
 
 #endif /* CPU_H_INCLUDED__ */
 

@@ -18,13 +18,11 @@ while (0)
 
 static long cpuFileSize(const char *file);
 
-
 static void cpuDump(const cpu_t *cpu);
 
 
 
 static const size_t stackInitSize = 100;
-
 
 static const size_t cpuRAMSize = 100;
 
@@ -128,6 +126,10 @@ static long cpuFileSize(const char *file)
 }
 
 
+#ifdef NDEBUG
+#define LOGPRINTF printf
+#endif
+
 static void cpuDump(const cpu_t *cpu)
 {
     CPU_CHECK(NULL != cpu, ;);
@@ -162,5 +164,51 @@ static void cpuDump(const cpu_t *cpu)
     }
 
     CLOSELOG();   
+}
+
+
+void cpuPrintError(const cpu_t *cpu, enum CPU_CODES code)
+{
+    CPU_CHECK(NULL != cpu, ;);
+
+    cpuDump(cpu);
+    
+    const char *desc = NULL;
+
+    switch (code)
+    {
+        case CPU_SUCCESS:
+            desc = "Successful";
+            break;
+        case CPU_ERROR:
+            desc = "General error";
+            break;
+        case CPU_WRONGOP:
+            desc = "Wrong opcode";
+            break;
+        case CPU_ZERODIV:
+            desc = "Division on zero";
+            break;
+        case CPU_STACKERR:
+            desc = "Error in stack usage";
+            break;
+        case CPU_FILEERR:
+            desc = "Error in file system usage";
+            break;
+        case CPU_ALLOCERR:
+            desc = "Memory allocation error";
+            break;
+        case CPU_SIGNERR:
+            desc = "Wrong signature";
+            break;
+        case CPU_FLOATERR:
+            desc = "Wrong result in FP operations";
+            break;
+
+        default:
+            desc = "Undefined status code";
+    }
+
+    printf("Status code %u, which means \"%s\"", code, desc);
 }
 
