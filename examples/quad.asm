@@ -53,6 +53,42 @@ call :abs       ; a b c D |D|
 push 0.001      ; a b c D |D| 0.001
 jb :one_root    ; a b c D
 
+dup             ; a b c D D
+push 0          ; a b c D D 0
+ja :two_sol     ; a b c D
+
+pop rdx         ; a b c
+push NAN        ; a b c NAN
+out
+ret
+
+two_sol:        ; a b c D
+sqrt            ; a b c d
+
+dup             ; a b c d d
+pop rdx         ; a b c d
+push 0          ; a b c d 0
+push rdx        ; a b c d 0 d
+sub             ; a b c d -d
+push 0          ; a b c d -d 0
+push rbx        ; a b c d -d 0 b
+sub             ; a b c d -d -b
+add             ; a b c d (-d-b)
+push 2          ; a b c d (-d-b) 2
+div             ; a b c d (-d-b)/2
+push rax        ; a b c d (-d-b)/2 a
+div             ; a b c d (-d-b)/(2a)
+out             ; a b c d
+
+push 0          ; a b c d 0
+push rbx        ; a b c d 0 b
+sub             ; a b c d -b
+add             ; a b c (d-b)
+push 2          ; a b c (d-b) 2
+div             ; a b c (d-b)/2
+push rax        ; a b c (d-b)/2 a
+div             ; a b c (d-b)/(2a)
+out
 ret
 
 one_root:       ; D
@@ -62,6 +98,8 @@ push rbx        ; -1 b
 mul             ; -b
 push 2          ; -b 2
 div             ; -b/2
+push rax        ; -b/2 a
+div             ; -b/(2a)
 out             
 ret
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
