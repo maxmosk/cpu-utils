@@ -50,7 +50,7 @@ linear:         ; rbx = b, rcx = c
 push rbx        ; b
 dup             ; b b
 call :abs       ; b |b|
-push 0          ; b |b| 0
+push 0.001      ; b |b| 0.001
 jb :zero_b      ; b
 pop rbx         ;
 push 0          ; 0
@@ -61,6 +61,17 @@ div             ; -c/b
 out             ;
 ret
 
-zero_b:         ; 0
+zero_b:         ; 0, rbx = 0, rcx = c
+pop rbx         ;
+push rcx        ; c
+call :abs       ; |c|
+push 0.001      ; |c| 0.001
+jb :zero_c      ;
+push NAN        ; NAN
+out
+
+
+zero_c:
+
 ret
 
