@@ -1,9 +1,11 @@
 in
 in
 in
-call :solveQuad
+call :solve_quad
 hlt
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 abs:            ; a
 dup             ; a a
 push 0          ; a a 0
@@ -13,8 +15,10 @@ absneg:
 push -1         ; a -1
 mul             ; -a
 ret
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 D:              ; rax = a, rbx = b, rcx = c
 push rbx        ; b
 dup             ; b b
@@ -26,9 +30,11 @@ mul             ; b^2 4 a*c
 mul             ; b^2 4*a*c
 sub             ; b^2-4*a*c
 ret
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-solveQuad:      ; a b c
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+solve_quad:     ; a b c
 pop rcx         ; a b
 pop rbx         ; a
 pop rax         ;
@@ -41,11 +47,27 @@ call :abs       ; a b c |a|
 push 0.001      ; a b c |a| 0
 jb :linear      ; a b c
 
-call :D
+call :D         ; a b c D
+dup             ; a b c D D
+call :abs       ; a b c D |D|
+push 0.001      ; a b c D |D| 0.001
+jb :one_root    ; a b c D
 
 ret
 
+one_root:       ; D
+pop rdx         ;
+push -1         ; -1
+push rbx        ; -1 b
+mul             ; -b
+push 2          ; -b 2
+div             ; -b/2
+out             
+ret
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 linear:         ; rbx = b, rcx = c
 push rbx        ; b
 dup             ; b b
@@ -74,6 +96,6 @@ ret
 zero_c:
 push INF
 out
-
 ret
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
