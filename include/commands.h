@@ -289,6 +289,28 @@ DEFCMD(SQRT, 0x14, 0,
       )
 
 
+#define SCREEN_X 10
+#define SCREEN_Y 10
+DEFCMD(PRINT, 0x15, 0,
+        {
+            char vbuf[SCREEN_Y * (SCREEN_X + 1)];
+
+            for (int y = 0; y < SCREEN_Y; y++)
+            {
+                for (int x = 0; x < SCREEN_X; x++)
+                {
+                    vbuf[y * (SCREEN_X + 1) + x] = (char) cpu->RAM[y * (SCREEN_X + 1) + x];
+                }
+                vbuf[y * (SCREEN_X + 1) - 1] = '\n';
+            }
+
+            fwrite(vbuf, sizeof *vbuf, sizeof vbuf / sizeof *vbuf, stdout);
+        }
+      )
+#undef SCREEN_X
+#undef SCREEN_Y
+
+
 DEFCMD(DUMP, 0x1F, 0,
         {
             cpuDump(cpu);
