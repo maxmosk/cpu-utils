@@ -50,6 +50,8 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile);
 
 enum ASM_CODES asmDtor(asm_t *thisAsm);
 
+void asmPrintError(enum ASM_CODES code);
+
 
 #endif /* ASM_H_INCLUDED__ */
 

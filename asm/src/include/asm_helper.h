@@ -16,5 +16,15 @@ do                           \
 while (0)
 
 
+#define COMPILE_ERROR(code)                                   \
+do                                                             \
+{                                                               \
+    printf("Compile error on line %zu on pass %d\n", line, pass);\
+    printf("> %s\n", curLine);                                    \
+    printf("Error code: %d\n", code);                              \
+}                                                                   \
+while (0)
+
+
 
 #endif /* ASM_HELPER_H_INCLUDED__ */

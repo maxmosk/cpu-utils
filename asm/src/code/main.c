@@ -2,6 +2,17 @@
 #include "asm.h"
 
 
+#define CHECK(code)       \
+do                         \
+{                           \
+    int status = (code);     \
+    if (ASM_SUCCESS != status)\
+    {                          \
+        asmPrintError(status);  \
+    }                            \
+}                                 \
+while (0)
+
 
 int main(int argc, char **argv)
 {
@@ -12,12 +23,11 @@ int main(int argc, char **argv)
     }
 
     asm_t assem = {0};
-    asmCtor(&assem);
+    CHECK(asmCtor(&assem));
+    CHECK(asmLoad(&assem, argv[1]));
+    CHECK(asmBuild(&assem, argv[2]));
 
-    asmLoad(&assem, argv[1]);
-    asmBuild(&assem, argv[2]);
-
-    asmDtor(&assem);
+    CHECK(asmDtor(&assem));
 
     return 0;
 }

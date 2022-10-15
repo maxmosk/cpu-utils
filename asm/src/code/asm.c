@@ -95,18 +95,24 @@ enum ASM_CODES asmBuild(asm_t *thisAsm, const char *execFile)
             {
                 if (NULL != strchr(cmdBuf, ':'))
                 {
-                    ASM_CHECK(ASM_SUCCESS == asmAddLabel(curLine, thisAsm->labels, thisAsm->codeSize), ASM_ERROR);
+                    ASM_CHECK(ASM_SUCCESS == asmAddLabel(curLine, thisAsm->labels,
+                                thisAsm->codeSize), ASM_ERROR
+                             );
                     continue;
                 }
 
-                ASM_CHECK(ASM_SUCCESS == asmMakeInstr(thisAsm->code + thisAsm->codeSize,
-                            cmdBuf, argBuf, thisAsm->labels),
-                            ASM_INSTRERR
-                         );
+                int status = asmMakeInstr(thisAsm->code + thisAsm->codeSize,
+                                            cmdBuf, argBuf, thisAsm->labels);
+                if (ASM_SUCCESS != status)
+                {
+                    COMPILE_ERROR(status);
+                }
+                ASM_CHECK(ASM_SUCCESS == status, ASM_INSTRERR);
                 thisAsm->codeSize++;
             }
         }
     } 
+
 
     FILE *exec = NULL;
     ASM_CHECK(NULL != (exec = fopen(execFile, "wb")), ASM_ERROR);
@@ -305,5 +311,43 @@ static enum ASM_CODES asmSetArg(cpuInstruction_t *dest, const char *arg, const l
 
 
     return ASM_SUCCESS;
+}
+
+
+void asmPrintError(enum ASM_CODES code)
+{
+    const char *desc = NULL;
+    switch (code)
+    {
+        case ASM_SUCCESS:
+            desc = "Success";
+            break;
+        case ASM_ERROR:
+            desc = "General error";
+            break;
+        case ASM_ALLOCERR:
+            desc = "Memory allocation error";
+            break;
+        case ASM_FILEERR:
+            desc = "File system error";
+            break;
+        case ASM_TEXTERR:
+            desc = "Error in textlib usage";
+            break;
+        case ASM_INSTRERR:
+            desc = "Wrong instruction source";
+            break;
+        case ASM_ARGERR:
+            desc = "Error in command argument";
+            break;
+        case ASM_NULLPTR:
+            desc = "Null-pointer error";
+            break;
+
+        default:
+            desc = "Undefined status code";
+    }
+
+    printf("%s\n", desc);
 }
 
