@@ -69,9 +69,11 @@ push 0.001      ; |c| 0.001
 jb :zero_c      ;
 push NAN        ; NAN
 out
-
+ret
 
 zero_c:
+push INF
+out
 
 ret
 
