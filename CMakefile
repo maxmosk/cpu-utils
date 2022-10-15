@@ -17,5 +17,5 @@ CFLAGS_FLAGS=-fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,f
     -pie -fcheck-new -fstack-check -fstack-protector -fstrict-overflow \
     -flto-odr-type-merging -fno-omit-frame-pointer -fPIE
 CFLAGS_SYNTAX=-pedantic -std=gnu11
-CFLAGS_LINK=-lasan
+CFLAGS_LINK=-lasan -lm
 CFLAGS_DEBUG=-ggdb3 -O0

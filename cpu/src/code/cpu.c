@@ -174,7 +174,6 @@ void cpuPrintError(const cpu_t *cpu, enum CPU_CODES code)
     cpuDump(cpu);
     
     const char *desc = NULL;
-
     switch (code)
     {
         case CPU_SUCCESS:
@@ -209,6 +208,6 @@ void cpuPrintError(const cpu_t *cpu, enum CPU_CODES code)
             desc = "Undefined status code";
     }
 
-    printf("Status code %u, which means \"%s\"", code, desc);
+    printf("Status code %u, which means \"%s\"\n", code, desc);
 }
 

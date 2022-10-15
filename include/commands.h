@@ -281,12 +281,10 @@ DEFCMD(SQRT, 0x14, 0,
             cpuNumber_t num = NAN;
 
             CPU_CHECK(STACK_ERROR != stackPop(&cpu->stack, &num), CPU_STACKERR);
-            for (int i = 0; i < 2; i++)
-            {
-                num = sqrt(num);
-                CPU_CHECK(isfinite(num), CPU_FLOATERR);
-                CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, num), CPU_STACKERR);
-            }
+
+            num = sqrt(num);
+            CPU_CHECK(isfinite(num), CPU_FLOATERR);
+            CPU_CHECK(STACK_ERROR != stackPush(&cpu->stack, num), CPU_STACKERR);
         }
       )
 
