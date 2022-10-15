@@ -25,7 +25,7 @@ DEFCMD(PUSH, 0x01, 1,
                 }
 
                 num = cpu->RAM[addr];
-                sleep(1);
+                /*usleep();*/
             }
 
             else
@@ -150,7 +150,7 @@ DEFCMD(POP, 0x0A, 1,
                 }
 
                 dst = &cpu->RAM[addr];
-                sleep(1);
+                /*usleep();*/
             }
 
             else if (0 != cpu->code[cpu->pc].opcode.reg)
@@ -301,9 +301,10 @@ DEFCMD(PRINT, 0x15, 0,
                 {
                     vbuf[y * (SCREEN_X + 1) + x] = (char) cpu->RAM[y * (SCREEN_X + 1) + x];
                 }
-                vbuf[y * (SCREEN_X + 1) - 1] = '\n';
+                vbuf[(y + 1) * (SCREEN_X + 1) - 1] = '\n';
             }
 
+            fprintf(stdout, "\033[2J");
             fwrite(vbuf, sizeof *vbuf, sizeof vbuf / sizeof *vbuf, stdout);
         }
       )

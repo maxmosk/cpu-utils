@@ -24,7 +24,7 @@ static void cpuDump(const cpu_t *cpu);
 
 static const size_t stackInitSize = 100;
 
-static const size_t cpuRAMSize = 100;
+static const size_t cpuRAMSize = 3840;
 
 
 
