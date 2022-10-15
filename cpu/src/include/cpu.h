@@ -39,7 +39,8 @@ enum CPU_CODES
     CPU_STACKERR = 4,
     CPU_FILEERR  = 5,
     CPU_ALLOCERR = 6,
-    CPU_SIGNERR  = 7
+    CPU_SIGNERR  = 7,
+    CPU_FLOATERR = 8
 };
 
 
