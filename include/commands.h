@@ -289,11 +289,11 @@ DEFCMD(SQRT, 0x14, 0,
       )
 
 
-#define SCREEN_X 10
-#define SCREEN_Y 10
+#define SCREEN_X 80
+#define SCREEN_Y 24
 DEFCMD(PRINT, 0x15, 0,
         {
-            char vbuf[SCREEN_Y * (SCREEN_X + 1)];
+            static char vbuf[SCREEN_Y * (SCREEN_X + 1)];
 
             for (int y = 0; y < SCREEN_Y; y++)
             {
