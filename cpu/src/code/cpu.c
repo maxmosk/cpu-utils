@@ -30,8 +30,13 @@ static const size_t cpuRAMSize = 3840;
 
 enum CPU_CODES cpuCtor(cpu_t *cpu)
 {
+    CPU_CHECK(NULL != cpu, CPU_ERROR);
+
     enum STACK_CODES status = STACK_ERROR;
+
     (status = stackCtor(&(cpu->stack), stackInitSize)) ASSERTED;
+    CPU_CHECK(STACK_ERROR != status, CPU_STACKERR);
+
     (status = stackCtor(&(cpu->callstack), stackInitSize)) ASSERTED;
     CPU_CHECK(STACK_ERROR != status, CPU_STACKERR);
     
@@ -41,6 +46,8 @@ enum CPU_CODES cpuCtor(cpu_t *cpu)
 
 enum CPU_CODES cpuLoad(cpu_t *cpu, const char *codeFile)
 {
+    CPU_CHECK(NULL != cpu, CPU_ERROR);
+
     long codeSize = cpuFileSize(codeFile);
 
     cpu->code = calloc((size_t) codeSize, 1);
@@ -101,7 +108,10 @@ enum CPU_CODES cpuExec(cpu_t *cpu)
 
 enum CPU_CODES cpuDtor(cpu_t *cpu)
 {
+    CPU_CHECK(NULL != cpu, CPU_ERROR);
+
     enum STACK_CODES status = STACK_ERROR;
+
     (status = stackDtor(&(cpu->stack))) ASSERTED;
     CPU_CHECK(STACK_ERROR != status, CPU_STACKERR);
     (status = stackDtor(&(cpu->callstack))) ASSERTED;
